@@ -9,7 +9,7 @@
 
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+    exit;
 }
 
 /**
@@ -17,15 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class JAS_Frontend_Scripts {
 
-	/**
-	 * Hook in methods.
-	 */
-	public static function init() {
-		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'enqueue_scripts' ] );
-	}
+    /**
+     * Hook in methods.
+     */
+    public static function init() {
+        add_action( 'wp_enqueue_scripts', [ __CLASS__, 'enqueue_scripts' ] );
+    }
 
 
-    public function enqueue_scripts() {
+    public static function enqueue_scripts() {
         $js = 'assets/js/jobs-archive.min.js';
         $cache_bust = '?v='.filemtime( JAS_ABSPATH . $js);
 
