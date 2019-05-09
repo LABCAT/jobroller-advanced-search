@@ -8,7 +8,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+    exit;
 }
 
 /**
@@ -16,15 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class JAS_Post_types {
 
-	/**
-	 * Hook in methods.
-	 */
-	public static function init() {
-		add_action( 'init', [ __CLASS__, 'add_job_listings_rest_support' ], 99 );
+    /**
+     * Hook in methods.
+     */
+    public static function init() {
+        add_action( 'init', [ __CLASS__, 'add_job_listings_rest_support' ], 99 );
         add_action( 'rest_api_init', [ __CLASS__, 'add_job_listings_addtional_rest_fields' ], 10 );
 
         add_filter( 'archive_template', [ __CLASS__, 'load_job_listings_custom_template' ], 10, 1 );
-	}
+    }
 
     /* The "Job Listings" custom post type does not suppoort the "Job Listings" taxonomy by default.
      * so we need to override re-register the "Job Listings" custom post type to provide support for this taxonomy
@@ -32,50 +32,50 @@ class JAS_Post_types {
     public static function add_job_listings_rest_support(){
         global $jr_options;
         // get the slug value for the ad custom post type & taxonomies
-    	if ( $jr_options->jr_job_permalink ) {
-    		$post_type_base_url = $jr_options->jr_job_permalink;
-    	} else {
-    		$post_type_base_url = 'jobs';
-    	}
+        if ( $jr_options->jr_job_permalink ) {
+            $post_type_base_url = $jr_options->jr_job_permalink;
+        } else {
+            $post_type_base_url = 'jobs';
+        }
 
         // create the custom post type and category taxonomy for job listings
-    	register_post_type(
-    		APP_POST_TYPE,
+        register_post_type(
+            APP_POST_TYPE,
             [
                 'labels' => [
-        			'name'			=> __( 'Jobs', APP_TD ),
-        			'singular_name' => __( 'Job', APP_TD ),
-        			'add_new'		=> __( 'Add New', APP_TD ),
-        			'add_new_item'  => __( 'Add New Job', APP_TD ),
-        			'edit'			=> __( 'Edit', APP_TD ),
-        			'edit_item'		=> __( 'Edit Job', APP_TD ),
-        			'new_item'		=> __( 'New Job', APP_TD ),
-        			'view'			=> __( 'View Jobs', APP_TD ),
-        			'view_item'		=> __( 'View Job', APP_TD ),
-        			'search_items'	=> __( 'Search Jobs', APP_TD ),
-        			'not_found'		=> __( 'No jobs found', APP_TD ),
-        			'not_found_in_trash' => __( 'No jobs found in trash', APP_TD ),
-        			'parent'		=> __( 'Parent Job', APP_TD ),
-        		],
-        		'description'	=> __( 'This is where you can create new job listings on your site.', APP_TD ),
-        		'public'		=> true,
-        		'show_ui'		=> true,
-        		'capabilities'	=> [
-            		'edit_posts' => 'edit_jobs' // enables job listers to view pending jobs
-            	],
-        		'map_meta_cap'	=> true,
-        		'publicly_queryable' => true,
-        		'exclude_from_search' => false,
-        		'menu_position' => 8,
-        		'has_archive'	=> true,
-        		'menu_icon'		=> 'dashicons-portfolio',
-        		'hierarchical'	=> false,
-        		'rewrite'		=> [
+                    'name'			=> __( 'Jobs', APP_TD ),
+                    'singular_name' => __( 'Job', APP_TD ),
+                    'add_new'		=> __( 'Add New', APP_TD ),
+                    'add_new_item'  => __( 'Add New Job', APP_TD ),
+                    'edit'			=> __( 'Edit', APP_TD ),
+                    'edit_item'		=> __( 'Edit Job', APP_TD ),
+                    'new_item'		=> __( 'New Job', APP_TD ),
+                    'view'			=> __( 'View Jobs', APP_TD ),
+                    'view_item'		=> __( 'View Job', APP_TD ),
+                    'search_items'	=> __( 'Search Jobs', APP_TD ),
+                    'not_found'		=> __( 'No jobs found', APP_TD ),
+                    'not_found_in_trash' => __( 'No jobs found in trash', APP_TD ),
+                    'parent'		=> __( 'Parent Job', APP_TD ),
+                ],
+                'description'	=> __( 'This is where you can create new job listings on your site.', APP_TD ),
+                'public'		=> true,
+                'show_ui'		=> true,
+                'capabilities'	=> [
+                    'edit_posts' => 'edit_jobs' // enables job listers to view pending jobs
+                ],
+                'map_meta_cap'	=> true,
+                'publicly_queryable' => true,
+                'exclude_from_search' => false,
+                'menu_position' => 8,
+                'has_archive'	=> true,
+                'menu_icon'		=> 'dashicons-portfolio',
+                'hierarchical'	=> false,
+                'rewrite'		=> [
                     'slug' => $post_type_base_url,
                     'with_front' => false
                 ], /* Slug set so that permalinks work when just showing post name */
-        		'query_var'		=> true,
-        		'supports'		=> [
+                'query_var'		=> true,
+                'supports'		=> [
                         'title',
                         'editor',
                         'author',
@@ -88,15 +88,16 @@ class JAS_Post_types {
                         'sticky'
                 ],
                 'show_in_rest' => true,
-        		'rest_base'     => 'jobs'
-    		]
-    	);
+                'rest_base'     => 'jobs'
+            ]
+        );
 
         register_rest_field( APP_POST_TYPE, 'metadata' );
     }
 
     public static function add_job_listings_addtional_rest_fields(){
         $rest_fields = [
+            'key',
             'listing_type',
             'job_type',
             'job_author',
@@ -118,9 +119,12 @@ class JAS_Post_types {
 
     public static function get_rest_data( $object, $field_name, $request ){
         $post_id = $object[ 'id' ];
-        $post_date = $object[ 'post_date' ];
-        $post_author = $object[ 'post_author' ];
+        $post_date = isset( $object[ 'post_date' ] ) ? $object[ 'post_date' ] : $object[ 'date' ];
+        $post_author = isset( $object[ 'post_author' ] ) ? $object[ 'post_author' ] : $object[ 'author' ];
         switch ($field_name) {
+            case 'key':
+                return $post_id;
+                break;
             case 'listing_type':
                 $type_id = jr_get_the_job_tax( $post_id, APP_TAX_TYPE );
                 $voluntary_job_types_array = [ 'voluntary' ];

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LoadingIcon from './components/LoadingIcon.js';
+import JobListItem from './components/JobListItem.js';
 
 class App extends Component {
     constructor(props){
@@ -10,7 +10,7 @@ class App extends Component {
     }
 
     componentDidMount(){
-        let endPoint = 'http://dogoodjobs.localhost/wp-json/wp/v2/jobs';
+        let endPoint = 'http://dogoodjobs.wp/wp-json/wp/v2/jobs';
         fetch(
            endPoint
         ).then(
@@ -49,13 +49,21 @@ class App extends Component {
     render() {
         let main = '';
         if(this.state.posts.length){
-            console.log(this.state.posts);
+            let jobs = this.state.posts;
+            main = <ol className="jobs">
+                        {
+                            jobs.map(
+                                job => (
+                                    <JobListItem  {...job} />
+                                )
+                            )
+                        }
+                    </ol>
         }
-        console.log(getUrlVars());
         return (
-            <div className="App">
-                Teste
-            </div>
+            <React.Fragment>
+                {main}
+            </React.Fragment>
         );
     }
 }
