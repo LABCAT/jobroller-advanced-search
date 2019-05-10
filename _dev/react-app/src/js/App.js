@@ -1,42 +1,70 @@
 import React, { Component } from 'react';
 import JobListItem from './components/JobListItem.js';
+import LoadingIcon from './components/LoadingIcon.js';
 
 class App extends Component {
     constructor(props){
         super();
         this.state  = {
-            posts: {}
+            totalPosts: 0,
+            paginatedPages: 0,
+            currentPaginationPage: 1,
+            posts: []
         }
     }
 
-    componentDidMount(){
-        let endPoint = 'http://dogoodjobs.wp/wp-json/wp/v2/jobs';
+    fetchPosts(page){
+        let endPoint = 'http://dogoodjobs.wp/wp-json/wp/v2/jobs?page=' + page;
         fetch(
            endPoint
         ).then(
-           res => res.json()
-        ).then(
-           (responseJson) => {
-               let posts = [];
-               if(Array.isArray(responseJson) && responseJson.length){
-                   posts = responseJson.map(
-                       (post)  => {
-                            return post;
+            (response) => {
+                if(this.state.currentPaginationPage < 2){
+                    let totalPosts = response.headers.get("X-WP-Total");
+                    let paginatedPages = response.headers.get("X-WP-TotalPages");
+
+                    this.setState(
+                        {
+                            ...this.state,
+                            totalPosts,
+                            paginatedPages
                         }
                     );
-               }
-               else {
-                   posts.push(
-                       responseJson
-                   );
-               }
+                }
 
-               this.setState(
-                    {
-                        ...this.state,
-                        posts
+                response.json().then(
+                    (responseJson) => {
+                        let newPosts = [];
+                        if(Array.isArray(responseJson) && responseJson.length){
+                            newPosts = responseJson.map(
+                                (post)  => {
+                                    return post;
+                                }
+                            );
+                        }
+                        else {
+                            newPosts.push(
+                                responseJson
+                            );
+                        }
+
+                        let currentPaginationPage = this.state.currentPaginationPage + 1;
+
+                        let posts = this.state.posts.concat(newPosts);
+                        this.setState(
+                            {
+                                ...this.state,
+                                posts,
+                                currentPaginationPage
+                            }
+                        );
+
+                        if(this.state.currentPaginationPage <= this.state.paginatedPages){
+
+                            this.fetchPosts(this.state.currentPaginationPage);
+                        }
                     }
-                );
+                )
            }
         )
        .catch((
@@ -46,11 +74,22 @@ class App extends Component {
        );
     }
 
+    componentDidMount(){
+        window.addEventListener(
+            'load',
+            () => {
+                this.fetchPosts(this.state.currentPaginationPage);
+            }
+        );
+    }
+
     render() {
-        let main = '';
+        let main = <li className="job loading">
+                        <LoadingIcon/>
+                    </li>
         if(this.state.posts.length){
             let jobs = this.state.posts;
-            main = <ol className="jobs">
+            main = <React.Fragment>
                         {
                             jobs.map(
                                 job => (
@@ -58,12 +97,15 @@ class App extends Component {
                                 )
                             )
                         }
-                    </ol>
+                        {
+                            (this.state.currentPaginationPage <= this.state.paginatedPages) ? <LoadingIcon/> : ''
+                        }
+                    </React.Fragment>
         }
         return (
-            <React.Fragment>
+            <ol className="jobs">
                 {main}
-            </React.Fragment>
+            </ol>
         );
     }
 }

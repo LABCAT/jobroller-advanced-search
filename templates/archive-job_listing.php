@@ -4,42 +4,42 @@
  */
 ?>
 
-	<?php get_header( 'search' ); ?>
+    <?php get_header( 'search' ); ?>
 
     <?php jr_filter_form(); ?>
 
-	<?php do_action( 'jobs_will_display' ); ?>
+    <?php //do_action( 'jobs_will_display' ); ?>
 
-	<?php do_action( 'before_jobs_archive' ); ?>
+    <?php do_action( 'before_jobs_archive' ); ?>
 
-	<div class="section">
+    <div class="section">
 
-		<?php do_action( 'appthemes_notices' ); ?>
+        <?php do_action( 'appthemes_notices' ); ?>
 
-		<h2 class="pagetitle">
+        <h2 class="pagetitle">
 
-			<small class="rss">
-				<a href="<?php echo esc_url( add_query_arg( 'post_type', APP_POST_TYPE, get_bloginfo('rss2_url') ) ); ?>"><i class="icon dashicons-before"></i></a>
-			</small>
+            <small class="rss">
+                <a href="<?php echo esc_url( add_query_arg( 'post_type', APP_POST_TYPE, get_bloginfo('rss2_url') ) ); ?>"><i class="icon dashicons-before"></i></a>
+            </small>
 
-			<?php printf( __( 'Latest Jobs%s', APP_TD ), ( ! empty( $paged ) && $paged > 1 ? ' ' . sprintf( __( '(page %d)', APP_TD ), $paged ) : '' ) ); ?>
-		</h2>
+            <?php printf( __( 'Latest Jobs%s', APP_TD ), ( ! empty( $paged ) && $paged > 1 ? ' ' . sprintf( __( '(page %d)', APP_TD ), $paged ) : '' ) ); ?>
+        </h2>
 
-		<?php //appthemes_load_template('loop-job.php'); ?>
+        <?php //appthemes_load_template('loop-job.php'); ?>
 
-		<div id="job-listings"></div>
+        <div id="job-listings"></div>
 
-		<?php jr_paging(); ?>
+        <?php //jr_paging(); ?>
 
-		<?php wp_reset_query(); ?>
+        <?php wp_reset_query(); ?>
 
-		<div class="clear"></div>
+        <div class="clear"></div>
 
-	</div><!-- end section -->
+    </div><!-- end section -->
 
-	<?php do_action( 'after_jobs_archive' ); ?>
+    <?php do_action( 'after_jobs_archive' ); ?>
 
-	<div class="clear"></div>
+    <div class="clear"></div>
 
 </div><!-- end main content -->
 

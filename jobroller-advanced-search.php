@@ -88,5 +88,4 @@ if ( ! class_exists( 'JobRollerAdvancedSearch' ) ) {
 
 }
 
-
 new JobRollerAdvancedSearch();

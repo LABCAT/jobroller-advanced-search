@@ -4,7 +4,6 @@ class JobListItem extends Component {
 
     render() {
         const { job_author, job_type, job_date, job_location, job_thumbnail, link, title } = this.props;
-        console.log(title);
         return (
             <li className="job">
                 <dl>
