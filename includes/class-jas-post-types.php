@@ -100,6 +100,8 @@ class JAS_Post_types {
             'key',
             'listing_type',
             'job_type',
+            'job_salary',
+            'job_category',
             'job_author',
             'job_location',
             'job_date',
@@ -154,23 +156,47 @@ class JAS_Post_types {
                 return $listing_type;
                 break;
             case 'job_type':
-                $job_type = '';
-                $tax_array = get_terms(
-                    'job_type',
-                    [
-                        'hide_empty' => '0'
-                    ]
-                );
-                if ( $tax_array && sizeof( $tax_array ) > 0 ) {
-                    foreach ( $tax_array as $tax_val ) {
-                        if ( is_object_in_term( $post_id, 'job_type', [ $tax_val->term_id ] ) ) {
-                            $job_type = '<span class="jtype ' . esc_attr( $tax_val->slug ) . '">' . $tax_val->name . '</span>';
-                            break;
-                        }
+                $type = [];
+                $job_types = get_the_terms( $post_id, APP_TAX_TYPE );
+                if ( $job_types &&  ! is_wp_error( $job_types ) ) {
+                    foreach ( $job_types as $job_type ) {
+                        $type = [
+                            'slug' => $job_type->slug,
+                            'label' => $job_type->name
+                        ];
+                        break;
                     }
-
                 }
-                return $job_type;
+                return $type;
+                break;
+            case 'job_salary':
+                $salary = [];
+                $job_salaries = get_the_terms( $post_id, APP_TAX_SALARY );
+                if ( $job_salaries &&  ! is_wp_error( $job_salaries ) ) {
+                    foreach ( $job_salaries as $job_salary ) {
+                        $salary = [
+                            'slug' => $job_salary->slug,
+                            'label' => $job_salary->name
+                        ];
+                        break;
+                    }
+                }
+                return $salary;
+                break;
+            case 'job_category':
+                $category = [];
+                $job_categories = get_the_terms( $post_id, APP_TAX_CAT );
+                if ( $job_categories &&  ! is_wp_error( $job_categories ) ) {
+                    foreach ( $job_categories as $job_categoy ) {
+                        $category = [
+                            'slug' => $job_categoy->slug,
+                            'label' => $job_categoy->name,
+                            'parent' => $job_categoy->parent ? self::get_high_level_job_cat( $job_categoy->parent ) : $job_categoy->slug
+                        ];
+                        break;
+                    }
+                }
+                return $category;
                 break;
             case 'job_author':
                 $company_name = wptexturize( strip_tags( get_post_meta( $post_id , '_Company', true ) ) );
@@ -209,6 +235,16 @@ class JAS_Post_types {
                 return  get_the_post_thumbnail( $post_id, 'thumbnail', array ( 'class' => 'jr_fx_job_listing_thumb' ) );
                 break;
         }
+    }
+
+    // Determine the top-most parent of a term
+    public static function get_high_level_job_cat( $parent ) {
+        // Climb up the hierarchy until we reach a term with parent = '0'
+        while ( $parent != '0' ) {
+            $term_id = $parent;
+            $parent  = get_term( $term_id, APP_TAX_CAT );
+        }
+        return $parent->slug;
     }
 
     public static function load_job_listings_custom_template( $template ){

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FilterForm from './filter-form/FilterForm.js';
 import JobListItem from './components/JobListItem.js';
 import LoadingIcon from './components/LoadingIcon.js';
 
@@ -14,7 +15,7 @@ class App extends Component {
     }
 
     fetchPosts(page){
-        let endPoint = 'http://dogoodjobs.wp/wp-json/wp/v2/jobs?page=' + page;
+        let endPoint = 'http://dogoodjobs.localhost/wp-json/wp/v2/jobs?page=' + page;
         fetch(
            endPoint
         ).then(
@@ -90,6 +91,9 @@ class App extends Component {
         if(this.state.posts.length){
             let jobs = this.state.posts;
             main = <React.Fragment>
+                        {
+                            <FilterForm  {...jobs} />
+                        }
                         {
                             jobs.map(
                                 job => (

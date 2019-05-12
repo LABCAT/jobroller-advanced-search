@@ -4,6 +4,8 @@ class JobListItem extends Component {
 
     render() {
         const { job_author, job_type, job_date, job_location, job_thumbnail, link, title } = this.props;
+        console.log(this.props);
+        console.log(job_type);
         return (
             <li className="job">
                 <dl>
@@ -11,7 +13,11 @@ class JobListItem extends Component {
                     <dt>
                         Type
                     </dt>
-                    <dd className="type" dangerouslySetInnerHTML={{__html: job_type}}></dd>
+                    <dd className="type">
+                        <span className={"jtype " + job_type.slug}>
+                            {job_type.label}
+                        </span>
+                    </dd>
                     <dt>
                         Job
                     </dt>
