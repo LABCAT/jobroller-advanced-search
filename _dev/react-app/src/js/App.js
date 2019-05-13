@@ -10,12 +10,17 @@ class App extends Component {
             totalPosts: 0,
             paginatedPages: 0,
             currentPaginationPage: 1,
-            posts: []
+            posts: [],
+            filters: {
+                jobTypes: {},
+                jobSalaries: {},
+                jobCategories: {}
+            }
         }
     }
 
     fetchPosts(page){
-        let endPoint = 'http://dogoodjobs.localhost/wp-json/wp/v2/jobs?page=' + page;
+        let endPoint = 'http://dogoodjobs.wp/wp-json/wp/v2/jobs?page=' + page;
         fetch(
            endPoint
         ).then(
@@ -36,9 +41,28 @@ class App extends Component {
                 response.json().then(
                     (responseJson) => {
                         let newPosts = [];
+                        let jobTypes = {};
+                        let jobSalaries = {};
+                        let jobCategories = {};
+
                         if(Array.isArray(responseJson) && responseJson.length){
                             newPosts = responseJson.map(
                                 (post)  => {
+                                    if (! (post.job_type.slug in this.state.filters.jobTypes)) {
+                                        if (post.job_type.slug !== undefined){
+                                            jobTypes[post.job_type.slug] = post.job_type.label;
+                                        }
+                                    }
+                                    if (! (post.job_salary.slug in this.state.filters.jobSalaries)) {
+                                        if (post.job_salary.slug !== undefined){
+                                            jobSalaries[post.job_salary.slug] = post.job_salary.label;
+                                        }
+                                    }
+                                    if (! (post.job_category.parentSlug in this.state.filters.jobCategories)) {
+                                        if (post.job_category.parentSlug !== undefined){
+                                            jobCategories[post.job_category.parentSlug] = post.job_category.parentLabel;
+                                        }
+                                    }
                                     return post;
                                 }
                             );
@@ -49,13 +73,21 @@ class App extends Component {
                             );
                         }
 
-                        let currentPaginationPage = this.state.currentPaginationPage + 1;
 
+                        let currentPaginationPage = this.state.currentPaginationPage + 1;
                         let posts = this.state.posts.concat(newPosts);
+                        jobTypes =  {...this.state.filters.jobTypes, ...jobTypes };
+                        jobSalaries =  {...this.state.filters.jobSalaries, ...jobSalaries };
+                        jobCategories =  {...this.state.filters.jobCategories, ...jobCategories };
                         this.setState(
                             {
                                 ...this.state,
                                 posts,
+                                filters: {
+                                    jobTypes,
+                                    jobSalaries,
+                                    jobCategories
+                                },
                                 currentPaginationPage
                             }
                         );
@@ -90,9 +122,11 @@ class App extends Component {
                     </li>
         if(this.state.posts.length){
             let jobs = this.state.posts;
+            let filters = this.state.filters;
+
             main = <React.Fragment>
                         {
-                            <FilterForm  {...jobs} />
+                            <FilterForm  {...filters} />
                         }
                         {
                             jobs.map(

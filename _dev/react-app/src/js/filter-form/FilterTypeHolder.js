@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
+import FilterFormCheckbox from './FilterFormCheckbox.js';
 
 class FilterTypeHolder extends Component {
 
     render() {
-        console.log(this.props);
+        const { filterType, label, ...options } = this.props;
         return (
-            <div class="filter-type-holder">
-                <label class="toggle" data-filter-type="job-type">
-                    Job Type
+            <div className="filter-type-holder">
+                <label className="toggle" data-filter-type={filterType}>
+                    {label}
                 </label>
                 <fieldset id={filterType + "-filter"}>
+                    {
+                        Object.keys(options).map(
+                            key => (
+                                <FilterFormCheckbox
+                                    key={key}
+                                    id={key}
+                                    label={options[key]}
+                                 />
+                            )
+                        )
+                    }
                 </fieldset>
             </div>
         )
@@ -17,3 +29,6 @@ class FilterTypeHolder extends Component {
 }
 
 export default FilterTypeHolder;
+
+
+//

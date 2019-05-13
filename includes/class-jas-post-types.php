@@ -187,11 +187,13 @@ class JAS_Post_types {
                 $category = [];
                 $job_categories = get_the_terms( $post_id, APP_TAX_CAT );
                 if ( $job_categories &&  ! is_wp_error( $job_categories ) ) {
-                    foreach ( $job_categories as $job_categoy ) {
+                    foreach ( $job_categories as $job_category ) {
+                        $parent_id = $job_category->parent;
                         $category = [
-                            'slug' => $job_categoy->slug,
-                            'label' => $job_categoy->name,
-                            'parent' => $job_categoy->parent ? self::get_high_level_job_cat( $job_categoy->parent ) : $job_categoy->slug
+                            'slug' => $job_category->slug,
+                            'label' => $job_category->name,
+                            'parentSlug' => $parent_id ? self::get_high_level_job_cat( $parent_id )->slug : $job_category->slug,
+                            'parentLabel' => $parent_id ? self::get_high_level_job_cat( $parent_id )->name : $job_category->name
                         ];
                         break;
                     }
@@ -238,13 +240,12 @@ class JAS_Post_types {
     }
 
     // Determine the top-most parent of a term
-    public static function get_high_level_job_cat( $parent ) {
-        // Climb up the hierarchy until we reach a term with parent = '0'
-        while ( $parent != '0' ) {
-            $term_id = $parent;
-            $parent  = get_term( $term_id, APP_TAX_CAT );
+    public static function get_high_level_job_cat( $parent_id ) {
+        while ( $parent_id != '0' ) {
+            $parent = get_term( $parent_id, APP_TAX_CAT );
+            $parent_id  = $parent->parent;
         }
-        return $parent->slug;
+        return $parent;
     }
 
     public static function load_job_listings_custom_template( $template ){

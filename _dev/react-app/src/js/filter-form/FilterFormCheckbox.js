@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 class FilterFormCheckbox extends Component {
 
     render() {
-        console.log(this.props);
+        const { id, label } = this.props;
         return (
             <div className="filter-form-checkbox">
-                <input type="checkbox" name="{slug}" id="{slug}" value="show">
-                <label for="{slug}">{label}</label>
+                <input type="checkbox" name={id} id={id} value="show"/>
+                <label htmlFor={id}>{label}</label>
             </div>
         )
     }
