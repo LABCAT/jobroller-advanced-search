@@ -6,6 +6,7 @@ import LoadingIcon from './components/LoadingIcon.js';
 class App extends Component {
     constructor(props){
         super();
+        this.handleFilterUpate = this.handleFilterUpate.bind(this);
         this.state  = {
             totalPosts: 0,
             paginatedPages: 0,
@@ -20,7 +21,7 @@ class App extends Component {
     }
 
     fetchPosts(page){
-        let endPoint = 'http://dogoodjobs.wp/wp-json/wp/v2/jobs?page=' + page;
+        let endPoint = 'http://dogoodjobs.localhost/wp-json/wp/v2/jobs?page=' + page;
         fetch(
            endPoint
         ).then(
@@ -116,6 +117,11 @@ class App extends Component {
         );
     }
 
+    handleFilterUpate(filterType, name) {
+        console.log(filterType);
+        console.log(name);
+    }
+
     render() {
         let main = <li className="job loading">
                         <LoadingIcon/>
@@ -126,7 +132,10 @@ class App extends Component {
 
             main = <React.Fragment>
                         {
-                            <FilterForm  {...filters} />
+                            <FilterForm
+                                handleFilterUpdate={this.handleFilterUpdate}
+                                {...filters}
+                            />
                         }
                         {
                             jobs.map(
