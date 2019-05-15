@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import SlideToggle from "react-slide-toggle";
-
 import FilterFormCheckbox from './FilterFormCheckbox.js';
 import DownCaretIcon from '../components/DownCaretIcon.js';
 
@@ -13,7 +12,7 @@ class FilterTypeHolder extends Component {
     };
 
     render() {
-        const { filterType, label, handleFilterTypeUpdate, ...options } = this.props;
+        const { filterType, label, onCheckboxChange, ...options } = this.props;
         return (
             <SlideToggle
                 render = {
@@ -39,8 +38,9 @@ class FilterTypeHolder extends Component {
                                                 <FilterFormCheckbox
                                                     key={key}
                                                     id={key}
-                                                    label={options[key]}
-                                                    onCheckboxChange={this.handleCheckboxChange}
+                                                    label={options[key]['label']}
+                                                    isSelected={options[key]['isSelected']}
+                                                    onCheckboxChange={onCheckboxChange}
                                                  />
                                             )
                                         )

@@ -3,33 +3,31 @@ import FilterTypeHolder from './FilterTypeHolder.js';
 
 class FilterForm extends Component {
 
-    handleFilterTypeUpdate(filterType, name) {
-        console.log(filterType);
-        console.log(name);
-        this.props.handleFilterUpate(filterType, name);
+    handleFilterTypeUpdate(event, filterType) {
+        this.props.handleFilterUpate(event.target.name, filterType);
     };
 
     render() {
-        const { jobSalaries, jobTypes, jobCategories, handleFilterUpate } = this.props;
+        const { jobSalaries, jobTypes, jobCategories} = this.props;
         return (
             <form>
                 <div id="filter-form-inner">
                     <FilterTypeHolder
                         filterType="job-type"
                         label="Job Type"
-                        handleFilterTypeUpdate={this.handleFilterTypeUpdate}
+                        onCheckboxChange={ (e) => this.handleFilterTypeUpdate(e, "jobTypes") }
                         {...jobTypes}
                     />
                     <FilterTypeHolder
                         filterType="job-salary"
                         label="Salary"
-                        handleFilterTypeUpdate={this.handleFilterTypeUpdate}
+                        onCheckboxChange={ (e) => this.handleFilterTypeUpdate(e, "jobSalaries") }
                         {...jobSalaries}
                     />
                     <FilterTypeHolder
                         filterType="job-category"
                         label="Category"
-                        handleFilterTypeUpdate={this.handleFilterTypeUpdate}
+                        onCheckboxChange={ (e) => this.handleFilterTypeUpdate(e, "jobCategories") }
                         {...jobCategories}
                     />
                 </div>

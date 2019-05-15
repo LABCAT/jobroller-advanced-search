@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import FilterForm from './filter-form/FilterForm.js';
+import FilterButtonsHolder from './filter-form/FilterButtonsHolder.js';
 import JobListItem from './components/JobListItem.js';
 import LoadingIcon from './components/LoadingIcon.js';
 
@@ -51,17 +52,26 @@ class App extends Component {
                                 (post)  => {
                                     if (! (post.job_type.slug in this.state.filters.jobTypes)) {
                                         if (post.job_type.slug !== undefined){
-                                            jobTypes[post.job_type.slug] = post.job_type.label;
+                                            jobTypes[post.job_type.slug] = {
+                                                'label': post.job_type.label,
+                                                'isSelected' : false
+                                            }
                                         }
                                     }
                                     if (! (post.job_salary.slug in this.state.filters.jobSalaries)) {
                                         if (post.job_salary.slug !== undefined){
-                                            jobSalaries[post.job_salary.slug] = post.job_salary.label;
+                                            jobSalaries[post.job_salary.slug] = {
+                                                'label': post.job_salary.label,
+                                                'isSelected' : false
+                                            }
                                         }
                                     }
                                     if (! (post.job_category.parentSlug in this.state.filters.jobCategories)) {
                                         if (post.job_category.parentSlug !== undefined){
-                                            jobCategories[post.job_category.parentSlug] = post.job_category.parentLabel;
+                                            jobCategories[post.job_category.parentSlug]  = {
+                                                'label': post.job_category.parentLabel,
+                                                'isSelected' : false
+                                            }
                                         }
                                     }
                                     return post;
@@ -117,26 +127,40 @@ class App extends Component {
         );
     }
 
-    handleFilterUpate(filterType, name) {
-        console.log(filterType);
-        console.log(name);
+    handleFilterUpate(filterOption, filterType) {
+        let filters = {...this.state.filters};
+        filters[filterType][filterOption].isSelected = ! filters[filterType][filterOption].isSelected;
+        this.setState(
+            filters
+        );
     }
 
     render() {
-        let main = <li className="job loading">
-                        <LoadingIcon/>
-                    </li>
+        let filtersArea = '';
+        let jobsList =  <li className="job loading">
+                            <LoadingIcon/>
+                        </li>
+
         if(this.state.posts.length){
             let jobs = this.state.posts;
             let filters = this.state.filters;
 
-            main = <React.Fragment>
-                        {
-                            <FilterForm
-                                handleFilterUpdate={this.handleFilterUpdate}
-                                {...filters}
-                            />
-                        }
+            filtersArea =   <React.Fragment>
+                                {
+                                    <FilterForm
+                                        handleFilterUpate={ this.handleFilterUpate }
+                                        {...filters}
+                                    />
+                                }
+                                {
+                                    <FilterButtonsHolder
+                                        handleFilterUpate={ this.handleFilterUpate }
+                                        {...filters}
+                                    />
+                                }
+                            </React.Fragment>
+
+            jobsList = <React.Fragment>
                         {
                             jobs.map(
                                 job => (
@@ -150,9 +174,12 @@ class App extends Component {
                     </React.Fragment>
         }
         return (
-            <ol className="jobs">
-                {main}
-            </ol>
+            <React.Fragment>
+                {filtersArea}
+                <ol className="jobs">
+                    {jobsList}
+                </ol>
+            </React.Fragment>
         );
     }
 }
