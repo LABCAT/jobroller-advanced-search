@@ -98,7 +98,8 @@ class JAS_Post_types {
     public static function add_job_listings_addtional_rest_fields(){
         $rest_fields = [
             'key',
-            'listing_type',
+            'isShown',
+            'listingType',
             'job_type',
             'job_salary',
             'job_category',
@@ -127,7 +128,10 @@ class JAS_Post_types {
             case 'key':
                 return $post_id;
                 break;
-            case 'listing_type':
+            case 'isShown':
+                return true;
+                break;
+            case 'listingType':
                 $type_id = jr_get_the_job_tax( $post_id, APP_TAX_TYPE );
                 $voluntary_job_types_array = [ 'voluntary' ];
                 $voluntary_term_id = get_term_by( 'slug', 'voluntary', 'job_type' )->term_id;
@@ -161,6 +165,7 @@ class JAS_Post_types {
                 if ( $job_types &&  ! is_wp_error( $job_types ) ) {
                     foreach ( $job_types as $job_type ) {
                         $type = [
+                            'key' => $job_type->slug,
                             'slug' => $job_type->slug,
                             'label' => $job_type->name
                         ];
@@ -175,6 +180,7 @@ class JAS_Post_types {
                 if ( $job_salaries &&  ! is_wp_error( $job_salaries ) ) {
                     foreach ( $job_salaries as $job_salary ) {
                         $salary = [
+                            'key' => $job_salary->slug,
                             'slug' => $job_salary->slug,
                             'label' => $job_salary->name
                         ];
@@ -192,6 +198,7 @@ class JAS_Post_types {
                         $category = [
                             'slug' => $job_category->slug,
                             'label' => $job_category->name,
+                            'key' => $parent_id ? self::get_high_level_job_cat( $parent_id )->slug : $job_category->slug,
                             'parentSlug' => $parent_id ? self::get_high_level_job_cat( $parent_id )->slug : $job_category->slug,
                             'parentLabel' => $parent_id ? self::get_high_level_job_cat( $parent_id )->name : $job_category->name
                         ];

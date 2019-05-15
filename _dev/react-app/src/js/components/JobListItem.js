@@ -3,7 +3,12 @@ import React, { Component } from 'react';
 class JobListItem extends Component {
 
     render() {
-        const { job_author, job_type, job_date, job_location, job_thumbnail, link, title } = this.props;
+        const { isShown, listingType, job_author, job_type, job_date, job_location, job_thumbnail, link, title } = this.props;
+
+        if(!isShown || listingType === 'voluntary'){
+            return (null);
+        }
+
         return (
             <li className="job">
                 <dl>

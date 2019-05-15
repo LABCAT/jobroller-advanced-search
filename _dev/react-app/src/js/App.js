@@ -17,8 +17,84 @@ class App extends Component {
                 jobTypes: {},
                 jobSalaries: {},
                 jobCategories: {}
+            },
+            currentFilter: {
+                job_type: [],
+                job_salary: [],
+                job_category: []
             }
         }
+    }
+
+    handleFilterUpate(filterOptionKey, filterType) {
+        let filters = {...this.state.filters};
+        let currentFilter = {...this.state.currentFilter};
+        let postKey = '';
+        switch (filterType){
+            case "jobTypes":
+                postKey = 'job_type';
+                break;
+            case "jobSalaries":
+                postKey = 'job_salary';
+                break;
+            case "jobCategories":
+                postKey = 'job_category';
+                break;
+        }
+
+        filters[filterType][filterOptionKey].isSelected = ! filters[filterType][filterOptionKey].isSelected;
+        if(filters[filterType][filterOptionKey].isSelected){
+            currentFilter[postKey].push(filterOptionKey);
+        }
+        else {
+            let index = currentFilter[postKey].indexOf(filterOptionKey);
+            if (index > -1) {
+                currentFilter[postKey].splice(index, 1);
+            }
+        }
+        this.setState(
+            {
+                ...this.state,
+                filters,
+                currentFilter
+            }
+        );
+
+        this.updatePostDisplay(currentFilter);
+    }
+
+    updatePostDisplay(currentFilter) {
+        let posts = [...this.state.posts];
+        let filterKeys =  Object.keys(currentFilter);
+        let emptyFilter = true;
+
+        for (var i = 0; i < posts.length; i++) {
+            //first set the post to hidden
+            posts[i].isShown = false;
+            for (const filterKey of filterKeys) {
+                if(currentFilter[filterKey].length) {
+                    emptyFilter = false;
+                    let index = currentFilter[filterKey].indexOf(posts[i][filterKey].key);
+                    //if the post matches one of the current filters
+                    if (index > -1) {
+                        posts[i].isShown = true;
+                        //then move to check the next post
+                        break;
+                    }
+                }
+            }
+            //if the current filter is empty show all posts
+            if(emptyFilter) {
+                posts[i].isShown = true;
+            }
+        }
+
+        this.setState(
+            {
+                ...this.state,
+                posts
+            }
+        );
     }
 
     fetchPosts(page){
@@ -124,14 +200,6 @@ class App extends Component {
             () => {
                 this.fetchPosts(this.state.currentPaginationPage);
             }
-        );
-    }
-
-    handleFilterUpate(filterOption, filterType) {
-        let filters = {...this.state.filters};
-        filters[filterType][filterOption].isSelected = ! filters[filterType][filterOption].isSelected;
-        this.setState(
-            filters
         );
     }
 
