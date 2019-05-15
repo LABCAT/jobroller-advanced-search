@@ -1,0 +1,90 @@
+@import "abstracts/mixins";
+
+$hot-cinnamon: #E07528;
+$jaffa: #F47E3C;
+$chambray: #2F4F7E;
+$lightning-yellow: #FBB819;
+
+#filter-form {
+    margin-bottom: 20px;
+    padding: 10px;
+    fieldset {
+        box-sizing: border-box;
+        padding: 10px 5px;
+    }
+
+}
+
+#filter-form-inner {
+
+    .toggle, #filter-form-actions {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #D0D0D0;
+        font-weight: bold;
+
+        svg {
+            fill:$hot-cinnamon;
+            margin-left: auto;
+        }
+
+    }
+
+    label {
+
+        &:hover, &.selected {
+            cursor: pointer;
+            background: $hot-cinnamon;
+            color: white;
+
+            svg {
+                fill: white;
+            }
+        }
+
+        &.selected {
+
+            svg {
+                transform: rotate(180deg);
+            }
+
+            &:hover {
+                color: black;
+
+                svg {
+                    fill: black;
+                }
+
+            }
+        }
+    }
+}
+
+.filter-type-holder {
+    float: left;
+    width: 100%;
+    margin: 0 0 9px 0;
+
+    @include bp(sm-min){
+        width: calc(33.3333% - 6px);
+        margin: 0 9px 0 0;
+        &.last {
+            margin: 0;
+        }
+    }
+
+}
+
+.filter-form-checkbox {
+    clear: both;
+    margin-bottom: 5px;
+
+    input {
+        float: left;
+        margin-top: 0;
+        margin-right: 7px;
+    }
+
+}

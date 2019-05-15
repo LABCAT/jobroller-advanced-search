@@ -39,6 +39,14 @@ class JAS_Frontend_Scripts {
             true
         );
 
+        wp_localize_script(
+            'react-jobs-archive',
+            'RJA',
+            [
+                'siteURL' => get_site_url()
+            ]
+        );
+
     }
 }
 

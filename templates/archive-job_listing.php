@@ -6,8 +6,6 @@
 
     <?php get_header( 'search' ); ?>
 
-    <?php jr_filter_form(); ?>
-
     <?php //do_action( 'jobs_will_display' ); ?>
 
     <?php do_action( 'before_jobs_archive' ); ?>

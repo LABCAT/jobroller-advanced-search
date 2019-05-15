@@ -12,13 +12,14 @@ class FilterTypeHolder extends Component {
     };
 
     render() {
-        const { filterType, label, onCheckboxChange, ...options } = this.props;
+        const { filterType, label, className, onCheckboxChange, ...options } = this.props;
+        let classes = className ? className + " filter-type-holder" :  "filter-type-holder";
         return (
             <SlideToggle
                 render = {
                     ({ onToggle, setCollapsibleElement}) =>
                         (
-                            <div className="filter-type-holder">
+                            <div className={classes}>
                                 <label className="toggle" data-filter-type={filterType} onClick={onToggle}>
                                     {label}
                                     <DownCaretIcon/>

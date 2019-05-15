@@ -1,0 +1,75 @@
+
+@mixin bp($point) {
+    @if $point == xxl-min {
+        @media screen and (min-width: 1400px) { @content; }
+    }
+    @if $point == min-xxl {
+        @media screen and (min-width: 1400px) { @content; }
+    }
+    @else if $point == xxl-max {
+        @media screen and (max-width: 1400px) { @content; }
+    }
+    @else if $point == max-xxl {
+        @media screen and (max-width: 1400px) { @content; }
+    }
+    @else if $point == xl-max {
+        @media screen and (max-width: 1000px) { @content; }
+    }
+    @else if $point == max-xl {
+        @media screen and (max-width: 1000px) { @content; }
+    }
+    @else if $point == xl-min {
+        @media screen and (min-width: 1000px) { @content; }
+    }
+    @else if $point == min-xl {
+        @media screen and (min-width: 1000px) { @content; }
+    }
+    @else if $point == lg-max {
+        @media screen and (max-width: 861px) { @content; }
+    }
+    @else if $point == max-lg {
+        @media screen and (max-width: 861px) { @content; }
+    }
+    @else if $point == lg-min {
+        @media screen and (min-width: 861px) { @content; }
+    }
+    @else if $point == min-lg {
+        @media screen and (min-width: 861px) { @content; }
+    }
+    @else if $point == md-max {
+        @media screen and (max-width: 768px)  { @content; }
+    }
+    @else if $point == max-md {
+        @media screen and (max-width: 768px)  { @content; }
+    }
+    @else if $point == md-min {
+        @media screen and (min-width: 768px)  { @content; }
+    }
+    @else if $point == min-md {
+        @media screen and (min-width: 768px)  { @content; }
+    }
+    @else if $point == sm-min {
+        @media screen and (min-width: 600px)  { @content; }
+    }
+    @else if $point == min-sm {
+        @media screen and (min-width: 600px)  { @content; }
+    }
+    @else if $point == sm-max {
+        @media screen and (max-width: 400px)  { @content; }
+    }
+    @else if $point == max-sm {
+        @media screen and (max-width: 400px)  { @content; }
+    }
+    @else if $point == xs-min {
+        @media screen and (min-width: 480px)  { @content; }
+    }
+    @else if $point == min-xs {
+        @media screen and (min-width: 480px)  { @content; }
+    }
+    @else if $point == xs-max {
+        @media screen and (max-width: 319px)  { @content; }
+    }
+    @else if $point == max-xs {
+        @media screen and (max-width: 319px)  { @content; }
+    }
+}

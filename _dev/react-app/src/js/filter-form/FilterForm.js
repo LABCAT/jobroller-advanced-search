@@ -10,7 +10,7 @@ class FilterForm extends Component {
     render() {
         const { jobSalaries, jobTypes, jobCategories} = this.props;
         return (
-            <form>
+            <form id="filter-form">
                 <div id="filter-form-inner">
                     <FilterTypeHolder
                         filterType="job-type"
@@ -28,9 +28,11 @@ class FilterForm extends Component {
                         filterType="job-category"
                         label="Category"
                         onCheckboxChange={ (e) => this.handleFilterTypeUpdate(e, "jobCategories") }
+                        className="last"
                         {...jobCategories}
                     />
                 </div>
+                <div className="clear"></div>
             </form>
         )
     }

@@ -46,6 +46,7 @@ class FilterButtonsHolder extends Component {
         return (
             <div id="filter-buttons-holder">
                 {buttons}
+                <div className="clear"></div>
             </div>
         )
     }

@@ -4,11 +4,14 @@ import FilterButtonsHolder from './filter-form/FilterButtonsHolder.js';
 import JobListItem from './components/JobListItem.js';
 import LoadingIcon from './components/LoadingIcon.js';
 
+import '../scss/filter-form.scss';
+
 class App extends Component {
     constructor(props){
         super();
         this.handleFilterUpate = this.handleFilterUpate.bind(this);
         this.state  = {
+            siteURL: '',
             totalPosts: 0,
             paginatedPages: 0,
             currentPaginationPage: 1,
@@ -98,7 +101,7 @@ class App extends Component {
     }
 
     fetchPosts(page){
-        let endPoint = 'http://dogoodjobs.localhost/wp-json/wp/v2/jobs?page=' + page;
+        let endPoint = this.state.siteURL + '/wp-json/wp/v2/jobs?page=' + page;
         fetch(
            endPoint
         ).then(
@@ -195,6 +198,13 @@ class App extends Component {
     }
 
     componentDidMount(){
+        let siteURL = window.RJA.siteURL;
+        this.setState(
+            {
+                ...this.state,
+                siteURL
+            }
+        );
         window.addEventListener(
             'load',
             () => {
