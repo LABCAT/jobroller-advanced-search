@@ -26,8 +26,8 @@ class JobListItem extends Component {
                     </dt>
                     <dd className="title">
                         <strong>
-                            <a href={link}>
-                                {title.rendered}
+                            <a href={link} dangerouslySetInnerHTML={{ __html: title.rendered }}>
+
                             </a>
                         </strong>
                         {job_author}
