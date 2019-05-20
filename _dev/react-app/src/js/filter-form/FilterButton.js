@@ -9,7 +9,12 @@ class FilterButton extends Component {
                 name={name}
                 onClick={onButtonClick}
             >
-                {label}
+                <span>
+                    {label}
+                </span>
+                <span className="remove">
+                    ×
+                </span>
             </button>
         )
     }

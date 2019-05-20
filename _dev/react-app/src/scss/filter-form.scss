@@ -4,9 +4,9 @@ $hot-cinnamon: #E07528;
 $jaffa: #F47E3C;
 $chambray: #2F4F7E;
 $lightning-yellow: #FBB819;
+$fiery-orange: #A34E11;
 
 #filter-form {
-    margin-bottom: 20px;
     padding: 10px;
     fieldset {
         box-sizing: border-box;
@@ -75,6 +75,38 @@ $lightning-yellow: #FBB819;
         }
     }
 
+}
+
+#filter-buttons-holder {
+    margin-bottom: 20px;
+
+    button {
+        margin-right: 6px;
+        padding: 8px;
+        background-color: $hot-cinnamon;
+        border: 2px solid $fiery-orange;
+        border-radius: 5px;
+        color: $fiery-orange;
+        font-weight: bold;
+
+        &:hover {
+
+            background-color: $fiery-orange;
+            border: 2px solid $hot-cinnamon;
+            color: white;
+            cursor: pointer;
+
+            .remove {
+                color: white;
+            }
+        }
+    }
+
+    .remove {
+        padding-left: 5px;
+        color: $fiery-orange;
+        font-weight: bold;
+    }
 }
 
 .filter-form-checkbox {
