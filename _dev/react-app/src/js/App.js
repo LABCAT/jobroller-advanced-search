@@ -100,6 +100,33 @@ class App extends Component {
         );
     }
 
+    matchesCurrentFilter(jobListing){
+        let isShown = false;
+        let emptyFilter = true;
+        let currentFilter = {...this.state.currentFilter};
+        let filterKeys =  Object.keys(currentFilter);
+
+        for (const filterKey of filterKeys) {
+            if(currentFilter[filterKey].length) {
+                emptyFilter = false;
+                let index = currentFilter[filterKey].indexOf(jobListing[filterKey].key);
+                //if the post matches one of the current filters
+                if (index > -1) {
+                    isShown = true;
+                    //rest of the filters don't need to be checked
+                    break;
+                }
+            }
+        }
+
+        //if the current filter is empty all posts should be shown
+        if(emptyFilter) {
+            isShown = true;
+        }
+
+        return isShown;
+    }
+
     fetchPosts(page){
         let endPoint = this.state.siteURL + '/wp-json/wp/v2/jobs?page=' + page;
         fetch(
@@ -153,6 +180,7 @@ class App extends Component {
                                             }
                                         }
                                     }
+                                    post.isShown = this.matchesCurrentFilter(post);
                                     return post;
                                 }
                             );
