@@ -77,7 +77,7 @@ if ( ! class_exists( 'JobRollerAdvancedSearch' ) ) {
          */
         public function includes()
         {
-            include_once( JAS_ABSPATH . 'includes/class-jas-post-types.php' );
+            include_once( JAS_ABSPATH . 'includes/class-jas-job-archive-extensions.php' );
 
             if( $this->is_request( 'frontend' ) ){
                 include_once( JAS_ABSPATH . 'includes/class-jas-frontend-scripts.php' );

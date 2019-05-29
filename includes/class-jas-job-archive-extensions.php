@@ -12,87 +12,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * JAS_Post_types Class.
+ * JAS_Job_Archive_Extensions Class.
  */
-class JAS_Post_types {
+class JAS_Job_Archive_Extensions {
+
 
     /**
      * Hook in methods.
      */
     public static function init() {
-        add_action( 'init', [ __CLASS__, 'add_job_listings_rest_support' ], 99 );
-        add_action( 'rest_api_init', [ __CLASS__, 'add_job_listings_addtional_rest_fields' ], 10 );
+        add_action( 'rest_api_init', [ __CLASS__, 'add_job_listings_addtional_rest_fields' ], 99 );
+        add_action( 'pre_get_posts', [ __CLASS__, 'disable_job_archive_pagination' ], 99, 1 );
 
+        add_filter( 'register_post_type_args', [ __CLASS__, 'add_rest_support_to_job_listing_post_type' ], 99, 2 );
+        add_filter( 'register_taxonomy_args', [ __CLASS__, 'hide_job_listing_taxonomies_from_public' ], 99, 2 );
         add_filter( 'archive_template', [ __CLASS__, 'load_job_listings_custom_template' ], 10, 1 );
     }
 
-    /* The "Job Listings" custom post type does not suppoort the "Job Listings" taxonomy by default.
-     * so we need to override re-register the "Job Listings" custom post type to provide support for this taxonomy
+    /*
+     *
+     * @param $args       array    The original CPT args.
+     * @param $post_type  string   The CPT slug.
+     *
+     * @return array
      */
-    public static function add_job_listings_rest_support(){
-        global $jr_options;
-        // get the slug value for the ad custom post type & taxonomies
-        if ( $jr_options->jr_job_permalink ) {
-            $post_type_base_url = $jr_options->jr_job_permalink;
-        } else {
-            $post_type_base_url = 'jobs';
+    public function add_rest_support_to_job_listing_post_type( $args, $post_type ) {
+    	if ( APP_POST_TYPE !== $post_type ) {
+    		return $args;
+    	}
+    	$new_args = [
+            'show_in_rest' => true,
+            'rest_base'     => 'jobs'
+    	];
+    	// Merge args together.
+    	return array_merge( $args, $new_args );
+    }
+
+    /*
+     *
+     * @param $args       array    The original taxonomy args.
+     * @param $taxonomy  string   The taxonomy slug.
+     *
+     * @return array
+     */
+    public function hide_job_listing_taxonomies_from_public( $args, $taxonomy ) {
+        // Only target the taxonomys used by job+listing post type
+        $job_listing_taxonomies = [
+            APP_TAX_CAT,
+            APP_TAX_TYPE,
+            APP_TAX_TAG,
+            APP_TAX_SALARY
+        ];
+        if ( ! in_array( $taxonomy, $job_listing_taxonomies ) ){
+            return $args;
         }
 
-        // create the custom post type and category taxonomy for job listings
-        register_post_type(
-            APP_POST_TYPE,
-            [
-                'labels' => [
-                    'name'			=> __( 'Jobs', APP_TD ),
-                    'singular_name' => __( 'Job', APP_TD ),
-                    'add_new'		=> __( 'Add New', APP_TD ),
-                    'add_new_item'  => __( 'Add New Job', APP_TD ),
-                    'edit'			=> __( 'Edit', APP_TD ),
-                    'edit_item'		=> __( 'Edit Job', APP_TD ),
-                    'new_item'		=> __( 'New Job', APP_TD ),
-                    'view'			=> __( 'View Jobs', APP_TD ),
-                    'view_item'		=> __( 'View Job', APP_TD ),
-                    'search_items'	=> __( 'Search Jobs', APP_TD ),
-                    'not_found'		=> __( 'No jobs found', APP_TD ),
-                    'not_found_in_trash' => __( 'No jobs found in trash', APP_TD ),
-                    'parent'		=> __( 'Parent Job', APP_TD ),
-                ],
-                'description'	=> __( 'This is where you can create new job listings on your site.', APP_TD ),
-                'public'		=> true,
-                'show_ui'		=> true,
-                'capabilities'	=> [
-                    'edit_posts' => 'edit_jobs' // enables job listers to view pending jobs
-                ],
-                'map_meta_cap'	=> true,
-                'publicly_queryable' => true,
-                'exclude_from_search' => false,
-                'menu_position' => 8,
-                'has_archive'	=> true,
-                'menu_icon'		=> 'dashicons-portfolio',
-                'hierarchical'	=> false,
-                'rewrite'		=> [
-                    'slug' => $post_type_base_url,
-                    'with_front' => false
-                ], /* Slug set so that permalinks work when just showing post name */
-                'query_var'		=> true,
-                'supports'		=> [
-                        'title',
-                        'editor',
-                        'author',
-                        'thumbnail',
-                        'excerpt',
-                        'trackbacks',
-                        'custom-fields',
-                        'comments',
-                        'revisions',
-                        'sticky'
-                ],
-                'show_in_rest' => true,
-                'rest_base'     => 'jobs'
-            ]
-        );
+        $args[ 'public' ] = false;
 
-        register_rest_field( APP_POST_TYPE, 'metadata' );
+        return $args;
     }
 
     public static function add_job_listings_addtional_rest_fields(){
@@ -255,6 +232,14 @@ class JAS_Post_types {
         return $parent;
     }
 
+    public static function disable_job_archive_pagination( $query ) {
+
+        if( $query->is_single() && $query->is_page() ) {
+            //var_dump($query);
+            $query->set( 'nopaging', 1 );
+        }
+    }
+
     public static function load_job_listings_custom_template( $template ){
         if ( is_post_type_archive ( APP_POST_TYPE ) ) {
             $template = JAS_ABSPATH . 'templates/archive-job_listing.php';
@@ -263,4 +248,4 @@ class JAS_Post_types {
     }
 }
 
-JAS_Post_types::init();
+JAS_Job_Archive_Extensions::init();

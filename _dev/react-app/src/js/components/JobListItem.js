@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class JobListItem extends Component {
 
     render() {
-        const { isShown, listingType, job_author, job_type, job_date, job_location, job_thumbnail, link, title } = this.props;
+        const { isShown, listingType, job_author, job_type, job_category, job_salary, job_date, job_location, job_thumbnail, link, title } = this.props;
 
         if(!isShown || listingType === 'voluntary'){
             return (null);
@@ -20,6 +20,8 @@ class JobListItem extends Component {
                         <span className={"jtype " + job_type.slug}>
                             {job_type.label}
                         </span>
+                        {job_category.parentLabel}
+                        {job_salary.label}
                     </dd>
                     <dt>
                         Job
