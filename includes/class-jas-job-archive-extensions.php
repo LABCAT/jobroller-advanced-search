@@ -22,7 +22,7 @@ class JAS_Job_Archive_Extensions {
      */
     public static function init() {
         add_action( 'rest_api_init', [ __CLASS__, 'add_job_listings_addtional_rest_fields' ], 99 );
-        add_action( 'pre_get_posts', [ __CLASS__, 'disable_job_archive_pagination' ], 99, 1 );
+        add_action( 'pre_get_posts', [ __CLASS__, 'disable_job_archive_pagination' ], 99 );
 
         add_filter( 'register_post_type_args', [ __CLASS__, 'add_rest_support_to_job_listing_post_type' ], 99, 2 );
         add_filter( 'register_taxonomy_args', [ __CLASS__, 'hide_job_listing_taxonomies_from_public' ], 99, 2 );
@@ -233,11 +233,19 @@ class JAS_Job_Archive_Extensions {
     }
 
     public static function disable_job_archive_pagination( $query ) {
-
-        if( $query->is_single() && $query->is_page() ) {
-            //var_dump($query);
-            $query->set( 'nopaging', 1 );
+        // don't run on the backend
+        if ( is_admin() ){
+            return;
         }
+
+        if( $query->is_main_query() && $query->get( 'post_type' ) == APP_POST_TYPE ) {
+
+            if( $query->get( 'paged' ) ){
+                $query->set_404();
+            }
+
+        }
+        return $query;
     }
 
     public static function load_job_listings_custom_template( $template ){

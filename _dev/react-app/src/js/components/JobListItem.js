@@ -20,8 +20,6 @@ class JobListItem extends Component {
                         <span className={"jtype " + job_type.slug}>
                             {job_type.label}
                         </span>
-                        {job_category.parentLabel}
-                        {job_salary.label}
                     </dd>
                     <dt>
                         Job
@@ -33,6 +31,10 @@ class JobListItem extends Component {
                             </a>
                         </strong>
                         {job_author}
+                        <br/>
+                        <strong>Category: </strong>{job_category.parentLabel}
+                        <br/>
+                        <strong>Salary: </strong>{job_salary.label}
                     </dd>
                     <dt>
                         Location

@@ -6,13 +6,7 @@
 
     <?php get_header( 'search' ); ?>
 
-    <?php //do_action( 'jobs_will_display' ); ?>
-
-    <?php do_action( 'before_jobs_archive' ); ?>
-
     <div class="section">
-
-        <?php do_action( 'appthemes_notices' ); ?>
 
         <h2 class="pagetitle">
 
@@ -23,22 +17,15 @@
             <?php printf( __( 'Latest Jobs%s', APP_TD ), ( ! empty( $paged ) && $paged > 1 ? ' ' . sprintf( __( '(page %d)', APP_TD ), $paged ) : '' ) ); ?>
         </h2>
 
-        <?php //appthemes_load_template('loop-job.php'); ?>
 
         <div id="job-listings"></div>
-
-        <?php //jr_paging(); ?>
-
-        <?php wp_reset_query(); ?>
 
         <div class="clear"></div>
 
     </div><!-- end section -->
 
-    <?php do_action( 'after_jobs_archive' ); ?>
-
     <div class="clear"></div>
 
 </div><!-- end main content -->
 
-<?php if ( $jr_options->jr_show_sidebar ): get_sidebar(); endif ?>
+<?php get_sidebar();  ?>
