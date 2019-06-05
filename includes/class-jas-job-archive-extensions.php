@@ -22,7 +22,7 @@ class JAS_Job_Archive_Extensions {
      */
     public static function init() {
         add_action( 'rest_api_init', [ __CLASS__, 'add_job_listings_addtional_rest_fields' ], 99 );
-        add_action( 'pre_get_posts', [ __CLASS__, 'disable_job_archive_pagination' ], 99 );
+        add_action( 'pre_get_posts', [ __CLASS__, 'alter_job_archive_query' ], 99 );
 
         add_filter( 'register_post_type_args', [ __CLASS__, 'add_rest_support_to_job_listing_post_type' ], 99, 2 );
         add_filter( 'register_taxonomy_args', [ __CLASS__, 'hide_job_listing_taxonomies_from_public' ], 99, 2 );
@@ -76,6 +76,7 @@ class JAS_Job_Archive_Extensions {
         $rest_fields = [
             'key',
             'isShown',
+            'isFeatured',
             'listingType',
             'job_type',
             'job_salary',
@@ -107,6 +108,10 @@ class JAS_Job_Archive_Extensions {
                 break;
             case 'isShown':
                 return true;
+                break;
+            case 'isFeatured':
+                $is_featured = get_post_meta( $post_id, JR_ITEM_FEATURED_LISTINGS, true );
+                return $is_featured ? true : false;
                 break;
             case 'listingType':
                 $type_id = jr_get_the_job_tax( $post_id, APP_TAX_TYPE );
@@ -199,7 +204,7 @@ class JAS_Job_Archive_Extensions {
                 else if( ! $address ){
                     $address = 'Anywhere';
                 }
-                return $address;
+                return esc_html( $address );
                 break;
             case 'job_date':
                 $date =
@@ -232,16 +237,24 @@ class JAS_Job_Archive_Extensions {
         return $parent;
     }
 
-    public static function disable_job_archive_pagination( $query ) {
+    public static function alter_job_archive_query( $query ) {
         // don't run on the backend
         if ( is_admin() ){
             return;
         }
 
-        if( $query->is_main_query() && $query->get( 'post_type' ) == APP_POST_TYPE ) {
+        if( $query->get( 'post_type' ) == APP_POST_TYPE ) {
 
-            if( $query->get( 'paged' ) ){
-                $query->set_404();
+            if( $query->is_main_query() ){
+                if( $query->get( 'paged' ) ){
+                    $query->set_404();
+                }
+            }
+
+            if( defined('REST_REQUEST') && REST_REQUEST ){
+                $query->set( 'meta_key', JR_ITEM_FEATURED_LISTINGS );
+                $query->set( 'orderby', 'meta_value_num date' );
+                $query->set( 'order', 'DESC DESC' );
             }
 
         }

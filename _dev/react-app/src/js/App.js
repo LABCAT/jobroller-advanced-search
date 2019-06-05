@@ -248,7 +248,20 @@ class App extends Component {
                         </li>
 
         if(this.state.posts.length){
-            let jobs = this.state.posts;
+            let featuredJobs = this.state.posts.filter(
+                function(job){
+                    if (job.isFeatured) {
+                        return job;
+                    }
+                }
+            );
+            let jobs = this.state.posts.filter(
+                function(job){
+                    if (!job.isFeatured) {
+                        return job;
+                    }
+                }
+            );
             let filters = this.state.filters;
 
             filtersArea =   <React.Fragment>
@@ -266,7 +279,27 @@ class App extends Component {
                                 }
                             </React.Fragment>
 
-            jobsList = <React.Fragment>
+            jobsList =
+                    <React.Fragment>
+                        <h2 class="pagetitle">
+                            <small class="rss">
+                                <a href="http://dogoodjobs.localhost/feed/?post_type=job_listing"><i class="icon dashicons-before"></i></a>
+                            </small>
+                            Featured Jobs
+                        </h2>
+                        {
+                            featuredJobs.map(
+                                job => (
+                                    <JobListItem  {...job} />
+                                )
+                            )
+                        }
+                        <h2 class="pagetitle">
+                            <small class="rss">
+                                <a href="http://dogoodjobs.localhost/feed/?post_type=job_listing"><i class="icon dashicons-before"></i></a>
+                            </small>
+                            Latest Jobs
+                        </h2>
                         {
                             jobs.map(
                                 job => (

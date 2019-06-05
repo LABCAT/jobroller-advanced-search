@@ -30,7 +30,9 @@ class JobListItem extends Component {
 
                             </a>
                         </strong>
-                        {job_author}
+                        <span dangerouslySetInnerHTML={{ __html: job_author }}>
+
+                        </span>
                         <br/>
                         <strong>Category: </strong>{job_category.parentLabel}
                         <br/>
