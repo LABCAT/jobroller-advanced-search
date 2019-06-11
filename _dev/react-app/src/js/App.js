@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import FilterForm from './filter-form/FilterForm.js';
 import FilterButtonsHolder from './filter-form/FilterButtonsHolder.js';
-import JobListItem from './components/JobListItem.js';
+import JobsList from './job-list/JobsList.js';
+import JobsListItem from './job-list/JobsListItem.js';
 import LoadingIcon from './components/LoadingIcon.js';
 
 import '../scss/filter-form.scss';
@@ -243,9 +244,7 @@ class App extends Component {
 
     render() {
         let filtersArea = '';
-        let jobsList =  <li className="job loading">
-                            <LoadingIcon/>
-                        </li>
+        let sections =  <LoadingIcon/>
 
         if(this.state.posts.length){
             let featuredJobs = this.state.posts.filter(
@@ -279,33 +278,21 @@ class App extends Component {
                                 }
                             </React.Fragment>
 
-            jobsList =
+            sections =
                     <React.Fragment>
-                        <h2 class="pagetitle">
-                            <small class="rss">
-                                <a href="http://dogoodjobs.localhost/feed/?post_type=job_listing"><i class="icon dashicons-before"></i></a>
-                            </small>
-                            Featured Jobs
-                        </h2>
                         {
-                            featuredJobs.map(
-                                job => (
-                                    <JobListItem  {...job} />
-                                )
-                            )
+                            <JobsList
+                                jobs={featuredJobs}
+                                title="Featured Jobs"
+                                rssLink={this.state.siteURL + '/feed/?rss_featured=1'}
+                            />
                         }
-                        <h2 class="pagetitle">
-                            <small class="rss">
-                                <a href="http://dogoodjobs.localhost/feed/?post_type=job_listing"><i class="icon dashicons-before"></i></a>
-                            </small>
-                            Latest Jobs
-                        </h2>
                         {
-                            jobs.map(
-                                job => (
-                                    <JobListItem  {...job} />
-                                )
-                            )
+                            <JobsList
+                                jobs={jobs}
+                                title="Latest Jobs"
+                                rssLink={this.state.siteURL + '/feed/?post_type=job_listing'}
+                            />
                         }
                         {
                             (this.state.currentPaginationPage <= this.state.paginatedPages) ? <LoadingIcon/> : ''
@@ -315,9 +302,7 @@ class App extends Component {
         return (
             <React.Fragment>
                 {filtersArea}
-                <ol className="jobs">
-                    {jobsList}
-                </ol>
+                {sections}
             </React.Fragment>
         );
     }
