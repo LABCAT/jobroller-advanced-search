@@ -6,6 +6,11 @@ class JobsList extends Component {
 
     render() {
         const { jobs, title, rssLink } = this.props;
+
+        if(!jobs.length){
+            return (null);
+        }
+        
         let listItems =
                 <React.Fragment>
                     {
