@@ -223,7 +223,12 @@ class JAS_Job_Archive_Extensions {
                 return $date;
                 break;
             case 'job_thumbnail':
-                return  get_the_post_thumbnail( $post_id, 'thumbnail', array ( 'class' => 'jr_fx_job_listing_thumb' ) );
+                $img = '';
+                $file = get_attached_file( get_post_thumbnail_id( get_the_ID() ) );
+                if( file_exists( $file ) ){
+                    $img = get_the_post_thumbnail( $post_id, 'thumbnail', array ( 'class' => 'jr_fx_job_listing_thumb' ) );
+                }
+                return $img;
                 break;
         }
     }

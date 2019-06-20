@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
+import ClearAllButton from './ClearAllButton.js';
 import FilterButton from './FilterButton.js';
 
 class FilterButtonsHolder extends Component {
 
     handleFilterTypeUpdate(name, filterType) {
         this.props.handleFilterUpate(name, filterType);
-    };
+    }
+
+    handleClearAllFilters(){
+        this.props.handleClearFilters();
+    }
 
     render() {
         const { jobSalaries, jobTypes, jobCategories} = this.props;
@@ -41,11 +46,20 @@ class FilterButtonsHolder extends Component {
                     onButtonClick={ (e) => this.handleFilterTypeUpdate(option.name, option.filterType) }
                  />
             )
-        )
+        );
+
+        const clearAllButton =
+            selectedOptions.length < 2
+            ? ''
+            :
+            <ClearAllButton
+                onButtonClick={ (e) => this.handleClearAllFilters() }
+            />;
 
         return (
             <div id="filter-buttons-holder">
                 {buttons}
+                {clearAllButton}
                 <div className="clear"></div>
             </div>
         )

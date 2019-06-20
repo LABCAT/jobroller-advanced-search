@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import FilterTypeHolder from './FilterTypeHolder.js';
+import FilterTypeDropDown from './FilterTypeDropDown.js';
 
 class FilterForm extends Component {
 
     handleFilterTypeUpdate(event, filterType) {
+        event.preventDefault();
         this.props.handleFilterUpate(event.target.name, filterType);
     };
 
@@ -12,22 +13,22 @@ class FilterForm extends Component {
         return (
             <form id="filter-form">
                 <div id="filter-form-inner">
-                    <FilterTypeHolder
+                    <FilterTypeDropDown
                         filterType="job-type"
                         label="Job Type"
-                        onCheckboxChange={ (e) => this.handleFilterTypeUpdate(e, "jobTypes") }
+                        onDropDownItemSelect={ (e) => this.handleFilterTypeUpdate(e, "jobTypes") }
                         {...jobTypes}
                     />
-                    <FilterTypeHolder
+                    <FilterTypeDropDown
                         filterType="job-salary"
                         label="Salary"
-                        onCheckboxChange={ (e) => this.handleFilterTypeUpdate(e, "jobSalaries") }
+                        onDropDownItemSelect={ (e) => this.handleFilterTypeUpdate(e, "jobSalaries") }
                         {...jobSalaries}
                     />
-                    <FilterTypeHolder
+                    <FilterTypeDropDown
                         filterType="job-category"
                         label="Category"
-                        onCheckboxChange={ (e) => this.handleFilterTypeUpdate(e, "jobCategories") }
+                        onDropDownItemSelect={ (e) => this.handleFilterTypeUpdate(e, "jobCategories") }
                         className="last"
                         {...jobCategories}
                     />

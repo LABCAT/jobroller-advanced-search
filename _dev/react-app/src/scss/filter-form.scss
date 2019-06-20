@@ -1,16 +1,32 @@
 @import "abstracts/mixins";
-
-$hot-cinnamon: #E07528;
-$jaffa: #F47E3C;
-$chambray: #2F4F7E;
-$lightning-yellow: #FBB819;
-$fiery-orange: #A34E11;
+@import "abstracts/variables";
 
 #filter-form {
     padding: 10px;
+    
     fieldset {
         box-sizing: border-box;
         padding: 10px 5px;
+    }
+
+    .dropdown-menu {
+        float: left;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        min-width: 160px;
+        padding: 0;
+        margin: 0;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        font-size: 15px;
+        list-style: none;
+        text-align: left;
+        z-index: 1000;
     }
 
 }
@@ -21,7 +37,9 @@ $fiery-orange: #A34E11;
         box-sizing: border-box;
         display: flex;
         align-items: center;
+        width: 100%;
         padding: 10px;
+        background: white;
         border: 1px solid #D0D0D0;
         font-weight: bold;
 
@@ -32,7 +50,7 @@ $fiery-orange: #A34E11;
 
     }
 
-    label {
+    .toggle {
 
         &:hover, &.selected {
             cursor: pointer;
@@ -63,6 +81,7 @@ $fiery-orange: #A34E11;
 }
 
 .filter-type-holder {
+    position: relative;
     float: left;
     width: 100%;
     margin: 0 0 9px 0;
@@ -75,6 +94,47 @@ $fiery-orange: #A34E11;
         }
     }
 
+}
+
+.filter-form-option {
+    padding: 4px 10px;
+
+    &:hover {
+        background-color: lightgrey;
+    }
+
+    &:after {
+        content: ' ';
+        display: table;
+        clear: both;
+    }
+
+    button {
+        float: left;
+        width: calc(100% - 24px);
+        padding: 0;
+        background-color: transparent;
+        border: none;
+        text-align: left;
+    }
+
+    .remove {
+        display: inline-block;
+        float: right;
+        width: 8px;
+        padding: 0 8px;
+        visibility: hidden;
+        font-weight: 900;
+        text-align: left;
+    }
+
+    &.selected {
+        background-color: $hot-cinnamon;
+
+        .remove {
+            visibility: visible;
+        }
+    }
 }
 
 #filter-buttons-holder {
@@ -99,6 +159,18 @@ $fiery-orange: #A34E11;
             .remove {
                 color: white;
             }
+        }
+    }
+
+    #clear-all {
+        float: right;
+        background: transparent;
+        border: none;
+        color: $hot-cinnamon;
+        font-size: 16px;
+
+        &:hover {
+            color: $fiery-orange;
         }
     }
 

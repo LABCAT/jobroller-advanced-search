@@ -24,11 +24,17 @@ class JAS_Job_Listing_Extensions {
         add_action( 'wp_insert_post', [ __CLASS__, 'add_featured_listing_meta' ], 99, 3 );
     }
 
+
     public static function add_featured_listing_meta( $post_ID, $post, $update ) {
-        if( $post->post_type == APP_POST_TYPE ){
-            update_post_meta( $post_ID, JR_ITEM_FEATURED_LISTINGS, 0 );
-        }
-    }
+       //don't do this when being edited in the admin
+       if ( isset( $_POST['action'] ) && $_POST['action'] == 'editpost' ) {
+           return;
+       }
+
+       if( $post->post_type == APP_POST_TYPE ){
+           update_post_meta( $post_ID, JR_ITEM_FEATURED_LISTINGS, 0 );
+       }
+   }
 
 }
 

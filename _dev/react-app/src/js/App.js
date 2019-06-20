@@ -6,11 +6,13 @@ import JobsListItem from './job-list/JobsListItem.js';
 import LoadingIcon from './components/LoadingIcon.js';
 
 import '../scss/filter-form.scss';
+import '../scss/job-list-item.scss';
 
 class App extends Component {
     constructor(props){
         super();
         this.handleFilterUpate = this.handleFilterUpate.bind(this);
+        this.handleClearFilters = this.handleClearFilters.bind(this);
         this.state  = {
             siteURL: '',
             totalPosts: 0,
@@ -56,6 +58,7 @@ class App extends Component {
                 currentFilter[postKey].splice(index, 1);
             }
         }
+
         this.setState(
             {
                 ...this.state,
@@ -66,6 +69,40 @@ class App extends Component {
 
         this.updatePostDisplay(currentFilter);
     }
+
+    handleClearFilters() {
+        let filters = {...this.state.filters};
+        let filterKeys =  Object.keys(filters);
+        let currentFilter = {...this.state.currentFilter};
+        let currentFilterKeys =  Object.keys(currentFilter);
+
+        for (const fKey of filterKeys) {
+            let keys = Object.keys(filters[fKey])
+            for (let key of keys) {
+                filters[fKey][key].isSelected = false;
+            }
+        }
+
+        for (const cfKey of currentFilterKeys) {
+            let array = currentFilter[cfKey];
+            const length = array.length;
+            if(length){
+                for( let i = 0; i < length; i++){
+                    array.splice(0, 1);
+                }
+            }
+        }
+
+        this.setState(
+            {
+                ...this.state,
+                filters,
+                currentFilter
+            }
+        );
+        this.updatePostDisplay(currentFilter);
+    }
+
 
     updatePostDisplay(currentFilter) {
         let posts = [...this.state.posts];
@@ -245,18 +282,17 @@ class App extends Component {
     render() {
         let filtersArea = '';
         let sections =  <LoadingIcon/>
-
         if(this.state.posts.length){
             let featuredJobs = this.state.posts.filter(
                 function(job){
-                    if (job.isFeatured) {
+                    if (job.isFeatured && job.isShown) {
                         return job;
                     }
                 }
             );
             let jobs = this.state.posts.filter(
                 function(job){
-                    if (!job.isFeatured) {
+                    if (!job.isFeatured && job.isShown) {
                         return job;
                     }
                 }
@@ -273,11 +309,11 @@ class App extends Component {
                                 {
                                     <FilterButtonsHolder
                                         handleFilterUpate={ this.handleFilterUpate }
+                                        handleClearFilters={ this.handleClearFilters }
                                         {...filters}
                                     />
                                 }
                             </React.Fragment>
-
             sections =
                     <React.Fragment>
                         {

@@ -3,27 +3,17 @@ import React, { Component } from 'react';
 class JobsListItem extends Component {
 
     render() {
-        const { isShown, listingType, job_author, job_type, job_category, job_salary, job_date, job_location, job_thumbnail, link, title } = this.props;
+        const { isShown, isFeatured, listingType, job_author, job_type, job_category, job_salary, job_date, job_location, job_thumbnail, link, title } = this.props;
 
         if(!isShown || listingType === 'voluntary'){
             return (null);
         }
 
-        return (
-            <li className="job">
-                <dl>
+        let listClasses = isFeatured ? "job job-featured" : "job";
 
-                    <dt>
-                        Type
-                    </dt>
-                    <dd className="type">
-                        <span className={"jtype " + job_type.slug}>
-                            {job_type.label}
-                        </span>
-                    </dd>
-                    <dt>
-                        Job
-                    </dt>
+        return (
+            <li className={listClasses}>
+                <dl>
                     <dd className="title">
                         <strong>
                             <a href={link} dangerouslySetInnerHTML={{ __html: title.rendered }}>
@@ -33,10 +23,6 @@ class JobsListItem extends Component {
                         <span dangerouslySetInnerHTML={{ __html: job_author }}>
 
                         </span>
-                        <br/>
-                        <strong>Category: </strong>{job_category.parentLabel}
-                        <br/>
-                        <strong>Salary: </strong>{job_salary.label}
                     </dd>
                     <dt>
                         Location
@@ -52,12 +38,24 @@ class JobsListItem extends Component {
                     <dd className="date" dangerouslySetInnerHTML={{__html: job_date}}>
 
                     </dd>
-                    <div>
-                        <span className='jr_fx_job_listing_thumb jr_fx_r' dangerouslySetInnerHTML={{__html: job_thumbnail}}>
-
-                        </span>
-                    </div>
+                    <dt>
+                        Organisation Logo
+                    </dt>
                 </dl>
+                <div className="logo" dangerouslySetInnerHTML={{__html: job_thumbnail}}>
+
+                </div>
+                <div className="taxonomies">
+                    <span className={"jtype " + job_type.slug}>
+                        {job_type.label}
+                    </span>
+                    <span className="salary">
+                        {job_salary.label}
+                    </span>
+                    <span className="category">
+                        {job_category.parentLabel}
+                    </span>
+                </div>
             </li>
         )
     }
