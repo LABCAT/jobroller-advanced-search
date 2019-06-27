@@ -20,6 +20,15 @@ class JAS_Job_Archive_Extensions {
     /**
      * Hook in methods.
      */
+    public function __construct() {
+        // Add a filter to the save post to inject out template into the page cache
+		add_filter( 'wp_insert_post_data', array( $this, 'register_templates' ) );
+        add_filter( 'template_include', [ __CLASS__, 'load_job_search_custom_template' ], 999 );
+    }
+
+    /**
+     * Hook in methods.
+     */
     public static function init() {
         add_action( 'rest_api_init', [ __CLASS__, 'add_job_listings_addtional_rest_fields' ], 99 );
         add_action( 'pre_get_posts', [ __CLASS__, 'alter_job_archive_query' ], 99 );
@@ -272,6 +281,73 @@ class JAS_Job_Archive_Extensions {
         }
         return $template;
     }
+
+    /**
+	 * Adds our template to the pages cache in order to trick WordPress
+	 * into thinking the template file exists where it doens't really exist.
+	 */
+	public function register_templates( $atts ) {
+
+		// Create the key used for the themes cache
+		$cache_key = 'page_templates-' . md5( get_theme_root() . '/' . get_stylesheet() );
+
+		// Retrieve the cache list.
+		// If it doesn't exist, or it's empty prepare an array
+		$templates = wp_get_theme()->get_page_templates();
+
+		if ( empty( $templates ) ) {
+			$templates = [];
+		}
+
+		// New cache, therefore remove the old one
+		wp_cache_delete( $cache_key , 'themes');
+
+		// Now add our template to the list of templates by merging our templates
+		// with the existing templates array from the cache.
+		$templates = array_merge( $templates, $this->templates );
+
+		// Add the modified cache to allow WordPress to pick it up for listing
+		// available templates
+		wp_cache_add( $cache_key, $templates, 'themes', 1800 );
+
+		return $atts;
+
+	}
+
+    public static function load_job_search_custom_template( $template ){
+        var_dump('jas');
+        var_dump($template);
+        // Get global post
+		global $post;
+
+		// Return template if post is empty
+		if ( ! $post ) {
+			return $template;
+		}
+
+        $requested_template = get_post_meta(  $post->ID, '_wp_page_template', true);
+
+        var_dump($requested_template);
+
+
+		// // Return default template if we don't have a custom one defined
+		// if ( ! isset( $this->templates[ $requested_template ] ) ) {
+		// 	return $template;
+		// }
+        //
+        // $original_template = DINING_HUB_PLUGIN_DIR . '/templates/' . $requested_template;
+        // $themed_template = get_stylesheet_directory() . '/' . $requested_template;
+        //
+        // if( file_exists($themed_template) ){
+        //     $template = $themed_template;
+        // }
+        // else if( file_exists($original_template) ){
+        //     $template = $original_template;
+        // }
+
+        return $template;
+    }
 }
 
+new JAS_Job_Archive_Extensions();
 JAS_Job_Archive_Extensions::init();

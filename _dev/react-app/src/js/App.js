@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import GetURLVars from './functions/GetURLVars.js';
 import FilterForm from './filter-form/FilterForm.js';
 import FilterButtonsHolder from './filter-form/FilterButtonsHolder.js';
 import JobsList from './job-list/JobsList.js';
-import JobsListItem from './job-list/JobsListItem.js';
 import LoadingIcon from './components/LoadingIcon.js';
 
 import '../scss/filter-form.scss';
@@ -19,6 +19,8 @@ class App extends Component {
             paginatedPages: 0,
             currentPaginationPage: 1,
             posts: [],
+            searchTerm: '',
+            searchLocation: '',
             filters: {
                 jobTypes: {},
                 jobSalaries: {},
@@ -37,15 +39,14 @@ class App extends Component {
         let currentFilter = {...this.state.currentFilter};
         let postKey = '';
         switch (filterType){
-            case "jobTypes":
-                postKey = 'job_type';
-                break;
             case "jobSalaries":
                 postKey = 'job_salary';
                 break;
             case "jobCategories":
                 postKey = 'job_category';
                 break;
+            default:
+                postKey = 'job_type';
         }
 
         filters[filterType][filterOptionKey].isSelected = ! filters[filterType][filterOptionKey].isSelected;
@@ -104,30 +105,11 @@ class App extends Component {
     }
 
 
-    updatePostDisplay(currentFilter) {
+    updatePostDisplay() {
         let posts = [...this.state.posts];
-        let filterKeys =  Object.keys(currentFilter);
-        let emptyFilter = true;
 
         for (var i = 0; i < posts.length; i++) {
-            //first set the post to hidden
-            posts[i].isShown = false;
-            for (const filterKey of filterKeys) {
-                if(currentFilter[filterKey].length) {
-                    emptyFilter = false;
-                    let index = currentFilter[filterKey].indexOf(posts[i][filterKey].key);
-                    //if the post matches one of the current filters
-                    if (index > -1) {
-                        posts[i].isShown = true;
-                        //then move to check the next post
-                        break;
-                    }
-                }
-            }
-            //if the current filter is empty show all posts
-            if(emptyFilter) {
-                posts[i].isShown = true;
-            }
+            posts[i].isShown = this.matchesCurrentFilter(posts[i]);
         }
 
         this.setState(
@@ -139,30 +121,71 @@ class App extends Component {
     }
 
     matchesCurrentFilter(jobListing){
+        //first set the post to hidden
         let isShown = false;
-        let emptyFilter = true;
-        let currentFilter = {...this.state.currentFilter};
-        let filterKeys =  Object.keys(currentFilter);
+        //then check if the post matches current search term and location
+        isShown = this.matchesSearchTermAndLocation(jobListing);
 
-        for (const filterKey of filterKeys) {
-            if(currentFilter[filterKey].length) {
-                emptyFilter = false;
-                let index = currentFilter[filterKey].indexOf(jobListing[filterKey].key);
-                //if the post matches one of the current filters
-                if (index > -1) {
-                    isShown = true;
-                    //rest of the filters don't need to be checked
-                    break;
+        if(isShown) {
+            let emptyFilter = true;
+            let currentFilter = {...this.state.currentFilter};
+            let filterKeys =  Object.keys(currentFilter);
+
+            for (const filterKey of filterKeys) {
+                if(currentFilter[filterKey].length) {
+                    emptyFilter = false;
+                    let index = currentFilter[filterKey].indexOf(jobListing[filterKey].key);
+                    //if the post matches one of the current filters
+                    if (index > -1) {
+                        isShown = true;
+                        //then move to check the next post as rest of the filters don't need to be checked
+                        break;
+                    }
                 }
+            }
+
+            //if the current filter is empty all posts should be shown
+            if(emptyFilter) {
+                isShown = true;
             }
         }
 
-        //if the current filter is empty all posts should be shown
-        if(emptyFilter) {
-            isShown = true;
-        }
-
         return isShown;
+    }
+
+    matchesSearchTermAndLocation(jobListing){
+        let searchTerm = this.state.searchTerm.toLowerCase();
+        let searchLocation = this.state.searchLocation.toLowerCase();
+        if(searchTerm && searchLocation){
+            let matchesTerm = this.matchesSearchTerm(jobListing, searchTerm);
+            let matchesLocation = this.matchesSearchLocation(jobListing, searchLocation);
+            return (matchesTerm && matchesLocation) ? true : false;
+        }
+        else if(searchTerm){
+            return this.matchesSearchTerm(jobListing, searchTerm);
+        }
+        else if(searchLocation){
+            return this.matchesSearchLocation(jobListing, searchLocation);
+        }
+        return true;
+    }
+
+    matchesSearchTerm(jobListing, searchTerm){
+        let title = jobListing.title.rendered.toLowerCase();
+        let content = jobListing.content.rendered.toLowerCase();
+        if(title.includes(searchTerm) || content.includes(searchTerm)){
+            return true;
+        }
+        return false;
+    }
+
+
+    matchesSearchLocation(jobListing, searchLocation){
+        let location = jobListing.job_location.toLowerCase();
+        if(location.includes(searchLocation)){
+            return true;
+        }
+        return false;
     }
 
     fetchPosts(page){
@@ -265,10 +288,24 @@ class App extends Component {
 
     componentDidMount(){
         let siteURL = window.RJA.siteURL;
+        let searchTerm = '';
+        let searchLocation = '';
+        let urlVars = GetURLVars();
+
+        if(urlVars.hasOwnProperty("s")){
+            searchTerm = urlVars.s;
+        }
+
+        if(urlVars.hasOwnProperty("location")){
+            searchLocation = urlVars.location;
+        }
+
         this.setState(
             {
                 ...this.state,
-                siteURL
+                siteURL,
+                searchTerm,
+                searchLocation
             }
         );
         window.addEventListener(
@@ -283,18 +320,21 @@ class App extends Component {
         let filtersArea = '';
         let sections =  <LoadingIcon/>
         if(this.state.posts.length){
+            console.log(this.state);
             let featuredJobs = this.state.posts.filter(
                 function(job){
-                    if (job.isFeatured && job.isShown) {
+                    if (job.isFeatured && job.isShown && job.listingType !== 'voluntary') {
                         return job;
                     }
+                    return null;
                 }
             );
             let jobs = this.state.posts.filter(
                 function(job){
-                    if (!job.isFeatured && job.isShown) {
+                    if (!job.isFeatured && job.isShown && job.listingType !== 'voluntary') {
                         return job;
                     }
+                    return null;
                 }
             );
             let filters = this.state.filters;
@@ -314,26 +354,32 @@ class App extends Component {
                                     />
                                 }
                             </React.Fragment>
-            sections =
-                    <React.Fragment>
-                        {
-                            <JobsList
-                                jobs={featuredJobs}
-                                title="Featured Jobs"
-                                rssLink={this.state.siteURL + '/feed/?rss_featured=1'}
-                            />
-                        }
-                        {
-                            <JobsList
-                                jobs={jobs}
-                                title="Latest Jobs"
-                                rssLink={this.state.siteURL + '/feed/?post_type=job_listing'}
-                            />
-                        }
-                        {
-                            (this.state.currentPaginationPage <= this.state.paginatedPages) ? <LoadingIcon/> : ''
-                        }
-                    </React.Fragment>
+
+            if(jobs.length || featuredJobs.length){
+                sections =
+                        <React.Fragment>
+                            {
+                                <JobsList
+                                    jobs={featuredJobs}
+                                    title="Featured Jobs"
+                                    rssLink={this.state.siteURL + '/feed/?rss_featured=1'}
+                                />
+                            }
+                            {
+                                <JobsList
+                                    jobs={jobs}
+                                    title="Latest Jobs"
+                                    rssLink={this.state.siteURL + '/feed/?post_type=job_listing'}
+                                />
+                            }
+                            {
+                                (this.state.currentPaginationPage <= this.state.paginatedPages) ? <LoadingIcon/> : ''
+                            }
+                        </React.Fragment>
+            }
+            else {
+                sections = <p className="jobs">No jobs found.</p>
+            }
         }
         return (
             <React.Fragment>
@@ -342,18 +388,6 @@ class App extends Component {
             </React.Fragment>
         );
     }
-}
-
-function getUrlVars(){
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
 }
 
 export default App;

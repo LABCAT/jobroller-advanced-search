@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 class JobsListItem extends Component {
 
     render() {
-        const { isShown, isFeatured, listingType, job_author, job_type, job_category, job_salary, job_date, job_location, job_thumbnail, link, title } = this.props;
+        const { isShown, isFeatured, job_author, job_type, job_category, job_salary, job_date, job_location, job_thumbnail, link, title } = this.props;
 
-        if(!isShown || listingType === 'voluntary'){
+        if(!isShown){
             return (null);
         }
 
