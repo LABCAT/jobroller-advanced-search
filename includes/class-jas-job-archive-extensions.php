@@ -147,6 +147,7 @@ class JAS_Job_Archive_Extensions {
                     foreach ( $job_types as $job_type ) {
                         $type = [
                             'key' => $job_type->slug,
+                            'ID' => $job_type->term_id,
                             'slug' => $job_type->slug,
                             'label' => $job_type->name
                         ];
@@ -162,6 +163,7 @@ class JAS_Job_Archive_Extensions {
                     foreach ( $job_salaries as $job_salary ) {
                         $salary = [
                             'key' => $job_salary->slug,
+                            'ID' => $job_salary->term_id,
                             'slug' => $job_salary->slug,
                             'label' => $job_salary->name
                         ];
@@ -180,6 +182,7 @@ class JAS_Job_Archive_Extensions {
                             'slug' => $job_category->slug,
                             'label' => $job_category->name,
                             'key' => $parent_id ? self::get_high_level_job_cat( $parent_id )->slug : $job_category->slug,
+                            'parentID' => $parent_id ? $parent_id : $job_category->term_id,
                             'parentSlug' => $parent_id ? self::get_high_level_job_cat( $parent_id )->slug : $job_category->slug,
                             'parentLabel' => $parent_id ? self::get_high_level_job_cat( $parent_id )->name : $job_category->name
                         ];

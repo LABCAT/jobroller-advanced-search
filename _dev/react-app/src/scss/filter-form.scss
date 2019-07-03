@@ -2,8 +2,8 @@
 @import "abstracts/variables";
 
 #filter-form {
-    padding: 10px;
-    
+    padding: 0 0 10px;
+
     fieldset {
         box-sizing: border-box;
         padding: 10px 5px;
@@ -13,7 +13,7 @@
         float: left;
         position: absolute;
         top: 100%;
-        left: 0;
+        left: -1px;
         width: 100%;
         min-width: 160px;
         padding: 0;
@@ -46,8 +46,12 @@
         svg {
             fill:$hot-cinnamon;
             margin-left: auto;
+            transition: all 0.4s ease;
         }
 
+        &.open svg {
+            transform: rotateZ(-180deg);
+        }
     }
 
     .toggle {
@@ -111,18 +115,19 @@
 
     button {
         float: left;
-        width: calc(100% - 24px);
+        width: 100%;
         padding: 0;
         background-color: transparent;
         border: none;
         text-align: left;
+        cursor: pointer;
     }
 
     .remove {
         display: inline-block;
         float: right;
-        width: 8px;
-        padding: 0 8px;
+        width: 12px;
+        padding: 0 3px;
         visibility: hidden;
         font-weight: 900;
         text-align: left;

@@ -5,8 +5,7 @@ import FilterButtonsHolder from './filter-form/FilterButtonsHolder.js';
 import JobsList from './job-list/JobsList.js';
 import LoadingIcon from './components/LoadingIcon.js';
 
-import '../scss/filter-form.scss';
-import '../scss/job-list-item.scss';
+import '../scss/main.scss';
 
 class App extends Component {
     constructor(props){
@@ -220,6 +219,7 @@ class App extends Component {
                                     if (! (post.job_type.slug in this.state.filters.jobTypes)) {
                                         if (post.job_type.slug !== undefined){
                                             jobTypes[post.job_type.slug] = {
+                                                'id': post.job_type.ID,
                                                 'label': post.job_type.label,
                                                 'isSelected' : false
                                             }
@@ -228,6 +228,7 @@ class App extends Component {
                                     if (! (post.job_salary.slug in this.state.filters.jobSalaries)) {
                                         if (post.job_salary.slug !== undefined){
                                             jobSalaries[post.job_salary.slug] = {
+                                                'id': post.job_salary.ID,
                                                 'label': post.job_salary.label,
                                                 'isSelected' : false
                                             }
@@ -236,6 +237,7 @@ class App extends Component {
                                     if (! (post.job_category.parentSlug in this.state.filters.jobCategories)) {
                                         if (post.job_category.parentSlug !== undefined){
                                             jobCategories[post.job_category.parentSlug]  = {
+                                                'id': post.job_category.parentID,
                                                 'label': post.job_category.parentLabel,
                                                 'isSelected' : false
                                             }
