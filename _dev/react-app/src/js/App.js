@@ -216,30 +216,35 @@ class App extends Component {
                         if(Array.isArray(responseJson) && responseJson.length){
                             newPosts = responseJson.map(
                                 (post)  => {
-                                    if (! (post.job_type.slug in this.state.filters.jobTypes)) {
-                                        if (post.job_type.slug !== undefined){
-                                            jobTypes[post.job_type.slug] = {
-                                                'id': post.job_type.ID,
-                                                'label': post.job_type.label,
-                                                'isSelected' : false
+                                    if(post.listingType !== 'voluntary' && this.matchesSearchTermAndLocation(post)){
+                                        if (! (post.job_type.slug in this.state.filters.jobTypes)) {
+                                            if (post.job_type.slug !== undefined){
+                                                jobTypes[post.job_type.slug] = {
+                                                    'id': post.job_type.ID,
+                                                    'key': post.job_type.slug,
+                                                    'label': post.job_type.label,
+                                                    'isSelected' : false
+                                                }
                                             }
                                         }
-                                    }
-                                    if (! (post.job_salary.slug in this.state.filters.jobSalaries)) {
-                                        if (post.job_salary.slug !== undefined){
-                                            jobSalaries[post.job_salary.slug] = {
-                                                'id': post.job_salary.ID,
-                                                'label': post.job_salary.label,
-                                                'isSelected' : false
+                                        if (! (post.job_salary.slug in this.state.filters.jobSalaries)) {
+                                            if (post.job_salary.slug !== undefined){
+                                                jobSalaries[post.job_salary.slug] = {
+                                                    'id': post.job_salary.ID,
+                                                    'key': post.job_salary.slug,
+                                                    'label': post.job_salary.label,
+                                                    'isSelected' : false
+                                                }
                                             }
                                         }
-                                    }
-                                    if (! (post.job_category.parentSlug in this.state.filters.jobCategories)) {
-                                        if (post.job_category.parentSlug !== undefined){
-                                            jobCategories[post.job_category.parentSlug]  = {
-                                                'id': post.job_category.parentID,
-                                                'label': post.job_category.parentLabel,
-                                                'isSelected' : false
+                                        if (! (post.job_category.parentSlug in this.state.filters.jobCategories)) {
+                                            if (post.job_category.parentSlug !== undefined){
+                                                jobCategories[post.job_category.parentSlug]  = {
+                                                    'id': post.job_category.parentID,
+                                                    'key': post.job_category.slug,
+                                                    'label': post.job_category.parentLabel,
+                                                    'isSelected' : false
+                                                }
                                             }
                                         }
                                     }
@@ -322,7 +327,6 @@ class App extends Component {
         let filtersArea = '';
         let sections =  <LoadingIcon/>
         if(this.state.posts.length){
-            console.log(this.state);
             let featuredJobs = this.state.posts.filter(
                 function(job){
                     if (job.isFeatured && job.isShown && job.listingType !== 'voluntary') {
@@ -379,7 +383,7 @@ class App extends Component {
                             }
                         </React.Fragment>
             }
-            else {
+            else if(this.state.currentPaginationPage == this.state.paginatedPages){
                 sections = <p className="jobs">No jobs found.</p>
             }
         }

@@ -53,27 +53,22 @@ class FilterTypeDropDown extends Component {
         let classes = className ? className + " filter-type-holder" :  "filter-type-holder";
         let buttonClasses = this.state.listOpen ? 'toggle open' : 'toggle';
 
-        //console.log(options.sort((a,b) => (a.ID > b.ID) ? 1 : ((b.ID > a.ID) ? -1 : 0)));
-        let dropdownOptions = Object.keys(options).reduce(
-            function(arrayEl, key) {
-                arrayEl[key] = optionskey];
-                return arrayEl;
-            }
+        let dropdownOptions  = Object.values(options).sort(
+            (a, b) => a.id - b.id
         );
-        console.log('dropdownOptions');
-        console.log(dropdownOptions);
+
         let list =
             !this.state.listOpen ? ''
             :
             <ul className="dropdown-menu" role="menu">
                 {
-                    Object.keys(options).map(
-                        key => (
+                    dropdownOptions.map(
+                        option => (
                             <FilterTypeDropDownItem
-                                key={key}
-                                id={key}
-                                label={options[key]['label']}
-                                isSelected={options[key]['isSelected']}
+                                key={option.key}
+                                id={option.key}
+                                label={option.label}
+                                isSelected={option.isSelected}
                                 onDropDownItemSelect={onDropDownItemSelect}
                              />
                         )
