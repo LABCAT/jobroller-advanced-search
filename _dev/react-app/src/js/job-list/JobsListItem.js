@@ -46,15 +46,24 @@ class JobsListItem extends Component {
 
                 </div>
                 <div className="taxonomies">
-                    <span className={"jtype " + job_type.slug}>
-                        {job_type.label}
-                    </span>
-                    <span className="salary">
-                        {job_salary.label}
-                    </span>
-                    <span className="category">
-                        {job_category.parentLabel}
-                    </span>
+                    {
+                        job_type.label !== undefined > 0 &&
+                        <span className={"jtype " + job_type.slug}>
+                            {job_type.label}
+                        </span>
+                    }
+                    {
+                        job_salary.label  !== undefined &&
+                        <span className="salary">
+                            {job_salary.label}
+                        </span>
+                    }
+                    {
+                        job_category.parentLabel !== undefined > 0 &&
+                        <span className="category">
+                            {job_category.parentLabel}
+                        </span>
+                    }
                 </div>
             </li>
         )
