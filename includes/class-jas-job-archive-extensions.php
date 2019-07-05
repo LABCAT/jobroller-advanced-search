@@ -35,7 +35,7 @@ class JAS_Job_Archive_Extensions {
      *
      * @return array
      */
-    public function add_rest_support_to_job_listing_post_type( $args, $post_type ) {
+    public static function add_rest_support_to_job_listing_post_type( $args, $post_type ) {
     	if ( APP_POST_TYPE !== $post_type ) {
     		return $args;
     	}
@@ -54,7 +54,7 @@ class JAS_Job_Archive_Extensions {
      *
      * @return array
      */
-    public function hide_job_listing_taxonomies_from_public( $args, $taxonomy ) {
+    public static function hide_job_listing_taxonomies_from_public( $args, $taxonomy ) {
         // Only target the taxonomys used by job+listing post type
         $job_listing_taxonomies = [
             APP_TAX_CAT,
