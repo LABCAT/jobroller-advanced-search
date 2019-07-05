@@ -125,14 +125,19 @@ class App extends Component {
         //then check if the post matches current search term and location
         isShown = this.matchesSearchTermAndLocation(jobListing);
 
+
         if(isShown) {
+            //reset the post to being hidden
+            isShown = false;
             let emptyFilter = true;
             let currentFilter = {...this.state.currentFilter};
             let filterKeys =  Object.keys(currentFilter);
 
+
             for (const filterKey of filterKeys) {
                 if(currentFilter[filterKey].length) {
                     emptyFilter = false;
+                    console.log(currentFilter[filterKey]);
                     let index = currentFilter[filterKey].indexOf(jobListing[filterKey].key);
                     //if the post matches one of the current filters
                     if (index > -1) {
