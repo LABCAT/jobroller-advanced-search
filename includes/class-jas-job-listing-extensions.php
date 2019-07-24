@@ -30,8 +30,6 @@ class JAS_Job_Listing_Extensions {
        $featured = get_post_meta( $post_ID, JR_ITEM_FEATURED_LISTINGS, true );
 
        if( $post->post_type == APP_POST_TYPE && ! $featured ){
-           var_dump($featured);
-           die('sdfsdf');
            update_post_meta( $post_ID, JR_ITEM_FEATURED_LISTINGS, 0 );
        }
    }
