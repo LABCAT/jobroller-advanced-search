@@ -26,12 +26,12 @@ class JAS_Job_Listing_Extensions {
 
 
     public static function add_featured_listing_meta( $post_ID, $post, $update ) {
-       //don't do this when being edited in the admin
-       if ( isset( $_POST['action'] ) && $_POST['action'] == 'editpost' ) {
-           return;
-       }
 
-       if( $post->post_type == APP_POST_TYPE ){
+       $featured = get_post_meta( $post_ID, JR_ITEM_FEATURED_LISTINGS, true );
+
+       if( $post->post_type == APP_POST_TYPE && ! $featured ){
+           var_dump($featured);
+           die('sdfsdf');
            update_post_meta( $post_ID, JR_ITEM_FEATURED_LISTINGS, 0 );
        }
    }
