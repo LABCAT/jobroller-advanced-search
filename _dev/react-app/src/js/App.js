@@ -195,7 +195,13 @@ class App extends Component {
     fetchPosts(page){
         let endPoint = this.state.siteURL + '/wp-json/wp/v2/jobs?page=' + page;
         fetch(
-           endPoint
+           endPoint,
+           {
+              headers : {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+               }
+            }
         ).then(
             (response) => {
                 if(this.state.currentPaginationPage < 2){
