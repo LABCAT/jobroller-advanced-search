@@ -52,10 +52,26 @@ class FilterTypeDropDown extends Component {
         const { filterType, label, className, onDropDownItemSelect, ...options } = this.props;
         let classes = className ? className + " filter-type-holder" :  "filter-type-holder";
         let buttonClasses = this.state.listOpen ? 'toggle open' : 'toggle';
+        let dropdownOptions = {};
 
-        let dropdownOptions  = Object.values(options).sort(
-            (a, b) => a.id - b.id
-        );
+        if(filterType === 'job-category'){
+            dropdownOptions  = Object.values(options).sort(
+                (a, b) => {
+                    if(a.label < b.label) {
+                        return -1;
+                    }
+                    if(a.label > b.label) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            );
+        }
+        else {
+            dropdownOptions  = Object.values(options).sort(
+                (a, b) => a.id - b.id
+            );
+        }
 
         let list =
             !this.state.listOpen ? ''

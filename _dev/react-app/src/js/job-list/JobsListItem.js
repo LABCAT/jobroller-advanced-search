@@ -47,7 +47,7 @@ class JobsListItem extends Component {
                 </div>
                 <div className="taxonomies">
                     {
-                        job_type.label !== undefined > 0 &&
+                        job_type.label !== undefined  &&
                         <span className={"jtype " + job_type.slug}>
                             {job_type.label}
                         </span>
@@ -59,7 +59,7 @@ class JobsListItem extends Component {
                         </span>
                     }
                     {
-                        job_category.parentLabel !== undefined > 0 &&
+                        job_category.parentLabel !== undefined &&
                         <span className="category">
                             {job_category.parentLabel}
                         </span>

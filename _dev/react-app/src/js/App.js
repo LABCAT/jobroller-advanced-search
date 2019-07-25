@@ -394,7 +394,7 @@ class App extends Component {
                             }
                         </React.Fragment>
             }
-            else if(this.state.currentPaginationPage == this.state.paginatedPages){
+            else if(this.state.currentPaginationPage === this.state.paginatedPages){
                 sections = <p className="jobs">No jobs found.</p>
             }
         }
