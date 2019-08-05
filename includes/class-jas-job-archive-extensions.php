@@ -2,7 +2,7 @@
 /**
  * Post Types
  *
- * @author   Rocketship Multimedia
+ * @author  MySite Digital
  * @package JobRollerAdvancedSearch/Classes
  * @version  1.0.0
  */

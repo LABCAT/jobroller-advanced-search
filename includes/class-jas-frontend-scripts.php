@@ -2,7 +2,7 @@
 /**
  * Handle frontend scripts
  *
- * @author   Rocketship Multimedia
+ * @author  MySite Digital
  * @package JobRollerAdvancedSearch/Classes
  * @version  1.0.0
  */
@@ -51,11 +51,28 @@ class JAS_Frontend_Scripts {
             true
         );
 
+        $search_locations = [];
+
+        $terms = get_terms( 
+            [
+                'taxonomy' => 'location',
+                'hide_empty' => false,
+                'orderby' => 'meta_value_num',
+                'meta_key' => 'order',
+                'order' => 'asc',
+            ]
+        );
+
+        foreach ( $terms as $term ) {
+            $search_locations[] = $term->name;
+        }
+
         wp_localize_script(
             'react-jobs-archive',
             'RJA',
             [
-                'siteURL' => get_site_url()
+                'siteURL' => get_site_url(),
+                'searchLocations' => json_encode( $search_locations )
             ]
         );
 
