@@ -124,34 +124,24 @@ class App extends Component {
         let isShown = false;
         //then check if the post matches current search term and location
         isShown = this.matchesSearchTermAndLocation(jobListing);
+        //now get the current filters and check if they are empty
+        let currentFilter = {...this.state.currentFilter};
+        let emptyFilter = ( !currentFilter.job_type.length && !currentFilter.job_salary.length && !currentFilter.job_category.length);
 
-
-        if(isShown) {
-            //reset the post to being hidden
-            isShown = false;
-            let emptyFilter = true;
-            let currentFilter = {...this.state.currentFilter};
+        //only need to check if a job matches the current filters if the filter is not empty
+        if(isShown && !emptyFilter) {
+            let matches = true;
             let filterKeys =  Object.keys(currentFilter);
-
-
+            
             for (const filterKey of filterKeys) {
-                if(currentFilter[filterKey].length) {
-                    emptyFilter = false;
-                    console.log(currentFilter[filterKey]);
-                    let index = currentFilter[filterKey].indexOf(jobListing[filterKey].key);
-                    //if the post matches one of the current filters
-                    if (index > -1) {
-                        isShown = true;
-                        //then move to check the next post as rest of the filters don't need to be checked
-                        break;
-                    }
+                //a job matches the current taxonomy filter if it matches at least one of the selected options for a taxonomy
+                //when a taxonomy filter is empty then all jobs are considered to be matching
+                if(matches && currentFilter[filterKey].length) {
+                    matches = currentFilter[filterKey].includes(jobListing[filterKey].key);
                 }
             }
 
-            //if the current filter is empty all posts should be shown
-            if(emptyFilter) {
-                isShown = true;
-            }
+            isShown = matches;
         }
 
         return isShown;
@@ -206,7 +196,7 @@ class App extends Component {
             (response) => {
                 if(this.state.currentPaginationPage < 2){
                     let totalPosts = response.headers.get("X-WP-Total");
-                    let paginatedPages = response.headers.get("X-WP-TotalPages");
+                    let paginatedPages = parseInt(response.headers.get("X-WP-TotalPages"));
 
                     this.setState(
                         {
@@ -252,7 +242,7 @@ class App extends Component {
                                             if (post.job_category.parentSlug !== undefined){
                                                 jobCategories[post.job_category.parentSlug]  = {
                                                     'id': post.job_category.parentID,
-                                                    'key': post.job_category.slug,
+                                                    'key': post.job_category.parentSlug,
                                                     'label': post.job_category.parentLabel,
                                                     'isSelected' : false
                                                 }
@@ -290,7 +280,6 @@ class App extends Component {
                         );
 
                         if(this.state.currentPaginationPage <= this.state.paginatedPages){
-
                             this.fetchPosts(this.state.currentPaginationPage);
                         }
                     }
@@ -337,6 +326,7 @@ class App extends Component {
     render() {
         let filtersArea = '';
         let sections =  <LoadingIcon/>
+        
         if(this.state.posts.length){
             let featuredJobs = this.state.posts.filter(
                 function(job){
@@ -371,7 +361,7 @@ class App extends Component {
                                     />
                                 }
                             </React.Fragment>
-
+            
             if(jobs.length || featuredJobs.length){
                 sections =
                         <React.Fragment>
@@ -394,7 +384,7 @@ class App extends Component {
                             }
                         </React.Fragment>
             }
-            else if(this.state.currentPaginationPage === this.state.paginatedPages){
+            else if(this.state.currentPaginationPage >= this.state.paginatedPages){
                 sections = <p className="jobs">No jobs found.</p>
             }
         }
