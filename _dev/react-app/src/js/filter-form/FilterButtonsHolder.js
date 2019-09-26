@@ -13,11 +13,12 @@ class FilterButtonsHolder extends Component {
     }
 
     render() {
-        const { jobSalaries, jobTypes, jobCategories} = this.props;
+        const { jobSalaries, jobTypes, jobCategories, jobLocations} = this.props;
         const filterTypes = {
             'jobTypes': jobTypes,
             'jobSalaries': jobSalaries,
-            'jobCategories': jobCategories
+            'jobCategories': jobCategories,
+            'jobLocations': jobLocations,
         }
         const filterTypeKeys = Object.keys(filterTypes);
 

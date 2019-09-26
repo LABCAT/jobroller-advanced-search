@@ -9,7 +9,7 @@ class FilterForm extends Component {
     };
 
     render() {
-        const { jobSalaries, jobTypes, jobCategories} = this.props;
+        const { jobSalaries, jobTypes, jobCategories, jobLocations} = this.props;
         return (
             <form id="filter-form">
                 <div id="filter-form-inner">
@@ -29,8 +29,14 @@ class FilterForm extends Component {
                         filterType="job-category"
                         label="Category"
                         onDropDownItemSelect={ (e) => this.handleFilterTypeUpdate(e, "jobCategories") }
-                        className="last"
                         {...jobCategories}
+                    />
+                    <FilterTypeDropDown
+                        filterType="job-location"
+                        label="Location"
+                        onDropDownItemSelect={(e) => this.handleFilterTypeUpdate(e, "jobLocations")}
+                        className="last"
+                        {...jobLocations}
                     />
                 </div>
                 <div className="clear"></div>

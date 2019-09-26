@@ -23,12 +23,14 @@ class App extends Component {
             filters: {
                 jobTypes: {},
                 jobSalaries: {},
-                jobCategories: {}
+                jobCategories: {},
+                jobLocations: {},
             },
             currentFilter: {
                 job_type: [],
                 job_salary: [],
-                job_category: []
+                job_category: [],
+                job_location: [],
             }
         }
     }
@@ -44,9 +46,13 @@ class App extends Component {
             case "jobCategories":
                 postKey = 'job_category';
                 break;
+            case "jobLocations":
+                postKey = 'job_location';
+                break;
             default:
                 postKey = 'job_type';
         }
+        
 
         filters[filterType][filterOptionKey].isSelected = ! filters[filterType][filterOptionKey].isSelected;
         if(filters[filterType][filterOptionKey].isSelected){
@@ -58,6 +64,7 @@ class App extends Component {
                 currentFilter[postKey].splice(index, 1);
             }
         }
+        
 
         this.setState(
             {
@@ -66,6 +73,7 @@ class App extends Component {
                 currentFilter
             }
         );
+
 
         this.updatePostDisplay(currentFilter);
     }
@@ -123,20 +131,22 @@ class App extends Component {
         //first set the post to hidden
         let isShown = false;
         //then check if the post matches current search term and location
-        isShown = this.matchesSearchTermAndLocation(jobListing);
+        isShown = this.matchesSearchTerm(jobListing);
         //now get the current filters and check if they are empty
         let currentFilter = {...this.state.currentFilter};
-        let emptyFilter = ( !currentFilter.job_type.length && !currentFilter.job_salary.length && !currentFilter.job_category.length);
+        let emptyFilter = (!currentFilter.job_type.length && !currentFilter.job_salary.length && !currentFilter.job_category.length && !currentFilter.job_location.length);
 
         //only need to check if a job matches the current filters if the filter is not empty
         if(isShown && !emptyFilter) {
             let matches = true;
             let filterKeys =  Object.keys(currentFilter);
-            
+
             for (const filterKey of filterKeys) {
                 //a job matches the current taxonomy filter if it matches at least one of the selected options for a taxonomy
                 //when a taxonomy filter is empty then all jobs are considered to be matching
                 if(matches && currentFilter[filterKey].length) {
+                    console.log(currentFilter[filterKey]);
+                    console.log(jobListing[filterKey]);
                     matches = currentFilter[filterKey].includes(jobListing[filterKey].key);
                 }
             }
@@ -164,18 +174,24 @@ class App extends Component {
         return true;
     }
 
-    matchesSearchTerm(jobListing, searchTerm){
+    matchesSearchTerm(jobListing){
+        let searchTerm = this.state.searchTerm.toLowerCase();
         let title = jobListing.title.rendered.toLowerCase();
         let content = jobListing.content.rendered.toLowerCase();
-        if(title.includes(searchTerm) || content.includes(searchTerm)){
+        //if there is no search term then all jobs are matching
+        if (title.includes(searchTerm) || content.includes(searchTerm) || !searchTerm){
             return true;
         }
         return false;
     }
 
 
-    matchesSearchLocation(jobListing, searchLocation){
+    matchesSearchLocation(jobListing, searchLocations){
+        let searchLocation = this.state.searchLocation.toLowerCase();
         let location = jobListing.job_location.toLowerCase();
+        console.log(searchLocations);
+        console.log(jobListing);
+        
         if(location.includes(searchLocation)){
             return true;
         }
@@ -213,11 +229,12 @@ class App extends Component {
                         let jobTypes = {};
                         let jobSalaries = {};
                         let jobCategories = {};
-
+                        let jobLocations = {};
+                        
                         if(Array.isArray(responseJson) && responseJson.length){
                             newPosts = responseJson.map(
                                 (post)  => {
-                                    if(post.listingType !== 'voluntary' && this.matchesSearchTermAndLocation(post)){
+                                    if(post.listingType !== 'voluntary' && this.matchesSearchTerm(post)){
                                         if (! (post.job_type.slug in this.state.filters.jobTypes)) {
                                             if (post.job_type.slug !== undefined){
                                                 jobTypes[post.job_type.slug] = {
@@ -248,6 +265,17 @@ class App extends Component {
                                                 }
                                             }
                                         }
+                                        if (!(post.job_location.slug in this.state.filters.jobLocations)) {
+                                            if (post.job_location.slug !== undefined) {
+                                                jobLocations[post.job_location.slug] = {
+                                                    'id': post.job_location.ID,
+                                                    'key': post.job_location.slug,
+                                                    'label': post.job_location.label,
+                                                    'sortOrder': post.job_location.sortOrder,
+                                                    'isSelected': false
+                                                }
+                                            }
+                                        }
                                     }
                                     post.isShown = this.matchesCurrentFilter(post);
                                     return post;
@@ -266,6 +294,7 @@ class App extends Component {
                         jobTypes =  {...this.state.filters.jobTypes, ...jobTypes };
                         jobSalaries =  {...this.state.filters.jobSalaries, ...jobSalaries };
                         jobCategories =  {...this.state.filters.jobCategories, ...jobCategories };
+                        jobLocations = { ...this.state.filters.jobLocations, ...jobLocations };
                         this.setState(
                             {
                                 ...this.state,
@@ -273,7 +302,8 @@ class App extends Component {
                                 filters: {
                                     jobTypes,
                                     jobSalaries,
-                                    jobCategories
+                                    jobCategories,
+                                    jobLocations
                                 },
                                 currentPaginationPage
                             }
@@ -345,6 +375,7 @@ class App extends Component {
                 }
             );
             let filters = this.state.filters;
+
 
             filtersArea =   <React.Fragment>
                                 {

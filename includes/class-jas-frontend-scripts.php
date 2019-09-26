@@ -63,8 +63,16 @@ class JAS_Frontend_Scripts {
             ]
         );
 
+        $count = 0;
         foreach ( $terms as $term ) {
-            $search_locations[] = $term->name;
+            $search_locations[ $term->slug ] = [
+                'ID'            => $term->term_id,
+                'key'           => $term->slug,
+                'label'         => $term->name,
+                'sortOrder'     => $count,
+                'isSelected'    => false
+            ];
+            $count++;
         }
 
         wp_localize_script(

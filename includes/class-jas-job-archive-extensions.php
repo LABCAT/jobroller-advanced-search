@@ -82,6 +82,7 @@ class JAS_Job_Archive_Extensions {
             'job_category',
             'job_author',
             'job_location',
+            'job_address',
             'job_date',
             'job_thumbnail'
         ];
@@ -196,14 +197,11 @@ class JAS_Job_Archive_Extensions {
                 return $company_name;
                 break;
             case 'job_location':
-                $address = get_post_meta( $post_id, 'geo_short_address', true );
-                if( $address === 'Overseas' ){
-                    $address = get_post_meta( $post_id, 'overseas_address', true );
-                    if( ! $address ){
-                        $address = 'Overseas';
-                    }
-                }
-                else if( ! $address ){
+                return self::get_job_location( $post_id );
+                break;
+            case 'job_address':
+                $address = self::get_job_address( $post_id );
+                if( ! $address ){
                     $address = 'Anywhere';
                 }
                 return esc_html( $address );
@@ -233,6 +231,76 @@ class JAS_Job_Archive_Extensions {
                 return $img;
                 break;
         }
+    }
+
+    public static function get_job_address( $post_id ) {
+        $address = get_post_meta( $post_id, 'geo_short_address', true );
+        if( $address === 'Overseas' ){
+            $address = get_post_meta( $post_id, 'overseas_address', true );
+            if( ! $address ){
+                $address = 'Overseas';
+            }
+        }
+        return $address;
+    }
+    
+    public static function get_job_location( $post_id ) {
+        $location = [];
+        $address = self::get_job_address( $post_id );
+        
+        if( $address ){
+            $search_locations = self::get_search_locations();
+            $potential_matches = array_keys( $search_locations );
+
+            foreach( $potential_matches as $potential_match ){
+                $address = strtolower( $address );
+                if ( strpos( $address, $potential_match ) !== false) {
+                    $location = $search_locations[ $potential_match ];
+                    break;
+                }
+            }
+        }
+        
+        if( empty( $location ) ) {
+            $location = [
+                'ID' => 0,
+                'slug' => 'anywhere',
+                'key' => 'anywhere',
+                'label' => 'Anywhere',
+                'sortOrder'  => 9999
+            ];    
+        }
+        return $location;
+    }
+
+    public static $search_locations = [];
+
+    public static function get_search_locations(){
+        if( empty( self::$search_locations ) ){
+            $terms = get_terms( 
+                [
+                    'taxonomy' => 'location',
+                    'hide_empty' => false,
+                    'orderby' => 'meta_value_num',
+                    'meta_key' => 'order',
+                    'order' => 'asc',
+                ]
+            );
+
+            $count = 0;
+            foreach ( $terms as $term ) {
+                self::$search_locations[ strtolower( $term->name ) ] = [
+                    'ID'            => $term->term_id,
+                    'slug'          => $term->slug,
+                    'key'          => $term->slug,
+                    'label'         => $term->name,
+                    'sortOrder'     => $count
+                ];
+                $count++;                          
+            }
+        }
+        
+        return self::$search_locations;
     }
 
     // Determine the top-most parent of a term

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class JobsListItem extends Component {
 
     render() {
-        const { isShown, isFeatured, job_author, job_type, job_category, job_salary, job_date, job_location, job_thumbnail, link, title } = this.props;
+        const { isShown, isFeatured, job_author, job_type, job_category, job_salary, job_date, job_address, job_thumbnail, link, title } = this.props;
 
         if(!isShown){
             return (null);
@@ -28,7 +28,7 @@ class JobsListItem extends Component {
                         Location
                     </dt>
                     <dd className="location">
-                        <strong dangerouslySetInnerHTML={{__html: job_location}}>
+                        <strong dangerouslySetInnerHTML={{ __html: job_address}}>
 
                         </strong>
                     </dd>
