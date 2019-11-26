@@ -142,12 +142,28 @@ class App extends Component {
             let filterKeys =  Object.keys(currentFilter);
 
             for (const filterKey of filterKeys) {
+                console.log(filterKey);
+                
                 //a job matches the current taxonomy filter if it matches at least one of the selected options for a taxonomy
                 //when a taxonomy filter is empty then all jobs are considered to be matching
                 if(matches && currentFilter[filterKey].length) {
                     console.log(currentFilter[filterKey]);
-                    console.log(jobListing[filterKey]);
-                    matches = currentFilter[filterKey].includes(jobListing[filterKey].key);
+                    console.log(jobListing);
+                    //a job can have many locations so needs to treated differently
+                    if (filterKey == 'job_location'){
+                        let jobAddress = jobListing.job_address.toLowerCase();
+                        let matchFound = false;
+                        for (var i = 0; i < currentFilter[filterKey].length; i++) {
+                            if (jobAddress.includes(currentFilter[filterKey][i])) {
+                                matchFound = true;
+                                break;
+                            }
+                        }
+                        matches = matchFound;
+                    }
+                    else {
+                        matches = currentFilter[filterKey].includes(jobListing[filterKey].key);
+                    }
                 }
             }
 
@@ -263,15 +279,23 @@ class App extends Component {
                                                 }
                                             }
                                         }
-                                        if (!(post.job_location.slug in this.state.filters.jobLocations)) {
-                                            if (post.job_location.slug !== undefined) {
-                                                jobLocations[post.job_location.slug] = {
-                                                    'id': post.job_location.ID,
-                                                    'key': post.job_location.slug,
-                                                    'label': post.job_location.label,
-                                                    'sortOrder': post.job_location.sortOrder,
-                                                    'isSelected': false
+                                        let possibleSearchLocations = JSON.parse(window.RJA.searchLocations);
+                                        if (!this.compareLocationKeys(possibleSearchLocations, jobLocations)) {
+                                            if (post.job_address !== undefined) {
+                                                let jobAddress = post.job_address.toLowerCase();
+
+                                                for (const pKey of Object.keys(possibleSearchLocations)) {
+                                                    if (jobAddress.includes(pKey)){
+                                                        jobLocations[pKey] = {
+                                                            'id': possibleSearchLocations[pKey].ID,
+                                                            'key': possibleSearchLocations[pKey].key,
+                                                            'label': possibleSearchLocations[pKey].label,
+                                                            'sortOrder': possibleSearchLocations[pKey].sortOrder,
+                                                            'isSelected': possibleSearchLocations[pKey].isSelected
+                                                        }
+                                                    }
                                                 }
+                                                
                                             }
                                         }
                                     }
@@ -319,6 +343,12 @@ class App extends Component {
                console.error(error);
            }
        );
+    }
+
+    compareLocationKeys(a, b) {
+        var aKeys = Object.keys(a).sort();
+        var bKeys = Object.keys(b).sort();        
+        return JSON.stringify(aKeys) === JSON.stringify(bKeys);
     }
 
     componentDidMount(){
