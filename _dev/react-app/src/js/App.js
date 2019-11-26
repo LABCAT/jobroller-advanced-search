@@ -142,15 +142,11 @@ class App extends Component {
             let filterKeys =  Object.keys(currentFilter);
 
             for (const filterKey of filterKeys) {
-                console.log(filterKey);
-                
                 //a job matches the current taxonomy filter if it matches at least one of the selected options for a taxonomy
                 //when a taxonomy filter is empty then all jobs are considered to be matching
                 if(matches && currentFilter[filterKey].length) {
-                    console.log(currentFilter[filterKey]);
-                    console.log(jobListing);
                     //a job can have many locations so needs to treated differently
-                    if (filterKey == 'job_location'){
+                    if (filterKey === 'job_location'){
                         let jobAddress = jobListing.job_address.toLowerCase();
                         let matchFound = false;
                         for (var i = 0; i < currentFilter[filterKey].length; i++) {
@@ -244,6 +240,7 @@ class App extends Component {
                         let jobSalaries = {};
                         let jobCategories = {};
                         let jobLocations = {};
+                        let urlSearchLocation = this.state.searchLocation.toLowerCase();
                         
                         if(Array.isArray(responseJson) && responseJson.length){
                             newPosts = responseJson.map(
@@ -330,6 +327,16 @@ class App extends Component {
                                 currentPaginationPage
                             }
                         );
+
+                        //match search term for location in url
+                        if (urlSearchLocation) {
+                            for (const key of Object.keys(jobLocations)) {
+                                if (urlSearchLocation.includes(key)) {
+                                    this.handleFilterUpate(key, 'jobLocations');
+                                    break;
+                                }
+                            }
+                        }
 
                         if(this.state.currentPaginationPage <= this.state.paginatedPages){
                             this.fetchPosts(this.state.currentPaginationPage);
