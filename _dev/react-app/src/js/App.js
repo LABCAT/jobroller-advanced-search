@@ -189,8 +189,6 @@ class App extends Component {
     matchesSearchLocation(jobListing, searchLocations){
         let searchLocation = this.state.searchLocation.toLowerCase();
         let location = jobListing.job_location.toLowerCase();
-        console.log(searchLocations);
-        console.log(jobListing);
         
         if(location.includes(searchLocation)){
             return true;

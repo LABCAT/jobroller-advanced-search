@@ -1,3 +1,8 @@
 @import "filter-form";
 @import "job-list-item";
 @import "loading-icon";
+
+#job-listings {
+    clear: both;
+    position: relative;
+}
