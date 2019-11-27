@@ -13,38 +13,43 @@ class JobsListItem extends Component {
 
         return (
             <li className={listClasses}>
-                <dl>
-                    <dd className="title">
-                        <strong>
-                            <a href={link} dangerouslySetInnerHTML={{ __html: title.rendered }}>
+                <div className="details">
+                    <dl class="title-and-location">
+                        <dd className="title">
+                            <strong>
+                                <a href={link} dangerouslySetInnerHTML={{ __html: title.rendered }}>
 
-                            </a>
-                        </strong>
-                        <span dangerouslySetInnerHTML={{ __html: job_author }}>
+                                </a>
+                            </strong>
+                            <span dangerouslySetInnerHTML={{ __html: job_author }}>
 
-                        </span>
-                    </dd>
-                    <dt>
-                        Location
-                    </dt>
-                    <dd className="location">
-                        <strong dangerouslySetInnerHTML={{ __html: job_address}}>
+                            </span>
+                        </dd>
+                        <dt>
+                            Location
+                        </dt>
+                        <dd className="location">
+                            <strong dangerouslySetInnerHTML={{ __html: job_address}}>
 
-                        </strong>
-                    </dd>
-                    <dt>
-                        Date Posted
-                    </dt>
-                    <dd className="date" dangerouslySetInnerHTML={{__html: job_date}}>
+                            </strong>
+                        </dd>
+                    </dl>
+                    <dl class="logo-and-date">
+                        <dt>
+                            Organisation Logo
+                        </dt>
+                        <dd className="logo" dangerouslySetInnerHTML={{ __html: job_thumbnail }}>
 
-                    </dd>
-                    <dt>
-                        Organisation Logo
-                    </dt>
-                </dl>
-                <div className="logo" dangerouslySetInnerHTML={{__html: job_thumbnail}}>
+                        </dd>
+                        <dt>
+                            Date Posted
+                        </dt>
+                        <dd className="date" dangerouslySetInnerHTML={{ __html: job_date }}>
 
+                        </dd>
+                    </dl>
                 </div>
+                
                 <div className="taxonomies">
                     {
                         job_type.label !== undefined  &&

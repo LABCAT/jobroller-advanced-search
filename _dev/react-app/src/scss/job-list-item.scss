@@ -1,105 +1,113 @@
 @import "abstracts/mixins";
 @import "abstracts/variables";
 
-ol.jobs {
-    li.job {
-        padding: 8px;
-    }
-
-    dl {
-        float: left;
-        width: calc(100% - 110px);
-
-        @include bp(min-sm) {
-            padding-bottom: 16px;
-        }
-    }
-
-    dd {
-        &.title {
-            width: 100%!important;
+#job-listings {
+    ol.jobs {
+        li.job {
+            padding: 8px;
         }
 
-        &.location {
-            width: 100%!important;
-            padding: 0;
-        }
-
-        &.date {
+        dl {
             float: left;
-            width: calc(100% - 110px)!important;
-            text-align: left;
 
-            strong {
-                color: #999;
-                font-size: .9em;
+            &.title-and-location {
+                width: calc(100% - 110px);
+            }
+
+            &.logo-and-date {
+                width: 110px;
+            }
+
+            @include bp(min-sm) {
+                padding-bottom: 16px;
             }
         }
 
-        @include bp(min-sm) {
+        dd {
             &.title {
-                width: calc(100% - 220px)!important;
+                width: 100%!important;
+                padding: 0 0 10px;
             }
 
             &.location {
-                width: 130px!important;
+                width: 100%!important;
+                padding: 0 0 10px;
             }
 
             &.date {
-                width: 70px!important;
+                width: 100%!important;
+                text-align: left;
 
                 strong {
-                    color: #555;
-                    font-size: 1.3em;
+                    color: #999;
+                    font-size: .9em;
                 }
             }
 
+            @include bp(min-sm) {
+                &.title {
+                    width: calc(100% - 160px)!important;
+                }
+
+                &.location {
+                    width: 140px!important;
+                }
+
+                &.date {
+                    strong {
+                        color: #555;
+                        font-size: 1.3em;
+                    }
+                }
+
+            }
+        }
+
+        &.logo {
+            float: right;
+            width: 110px;
         }
     }
 
-    &.logo {
-        float: right;
-        width: 110px;
-    }
-}
 
+    .taxonomies {
+        clear: both;
 
-.taxonomies {
-    clear: both;
+        span {
+            display: inline-block;
+            margin: 8px 8px 0 0;
+            padding: 3px 16px;
+            background-color: #666666;
+            color: white;
 
-    span {
-        display: inline-block;
-        margin: 8px 8px 0 0;
-        padding: 3px 16px;
-        background-color: #666666;
-        color: white;
+            &.full-time {
+                background-color: #D72F1D;
+            }
 
-        &.full-time {
-        	background-color: #D72F1D;
-        }
+            &.part-time {
+                background-color: #E3A029;
+            }
 
-        &.part-time {
-        	background-color: #E3A029;
-        }
+            &.freelance {
+                background-color: #8CB90E;
+            }
 
-        &.freelance {
-        	background-color: #8CB90E;
-        }
+            &.temporary {
+                background-color: #97479E;
+            }
 
-        &.temporary {
-        	background-color: #97479E;
-        }
+            &.internship {
+                background-color: #3B6284;
+            }
 
-        &.internship {
-        	background-color: #3B6284;
-        }
+            &.category {
+                background-color: $hot-cinnamon;
+            }
 
-        &.category {
-            background-color: $hot-cinnamon;
-        }
-
-        &.salary {
-            background-color: $fiery-orange;
+            &.salary {
+                background-color: $fiery-orange;
+            }
         }
     }
+
 }
