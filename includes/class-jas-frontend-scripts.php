@@ -51,29 +51,7 @@ class JAS_Frontend_Scripts {
             true
         );
 
-        $search_locations = [];
-
-        $terms = get_terms( 
-            [
-                'taxonomy' => 'location',
-                'hide_empty' => false,
-                'orderby' => 'meta_value_num',
-                'meta_key' => 'order',
-                'order' => 'asc',
-            ]
-        );
-
-        $count = 0;
-        foreach ( $terms as $term ) {
-            $search_locations[ $term->slug ] = [
-                'ID'            => $term->term_id,
-                'key'           => $term->slug,
-                'label'         => $term->name,
-                'sortOrder'     => $count,
-                'isSelected'    => false
-            ];
-            $count++;
-        }
+        $search_locations = JAS_Search_Locations::get_available_search_locations();
 
         wp_localize_script(
             'react-jobs-archive',

@@ -132,6 +132,70 @@ class JAS_Search_Locations {
         }
         return $pieces;
     }
+
+    public static function get_current_job_locations(){
+       $locations = '';
+
+       $query_args = [
+            'post_type' => 'job_listing',
+            'post_status' => 'publish',
+            'posts_per_page'=> -1, 
+            'numberposts'=>  -1,
+            'tax_query' => [
+                [
+                    'taxonomy' => 'job_type',
+                    'field' => 'slug',
+                    'terms' => 'voluntary',
+                    'operator'=> 'NOT IN'
+                ]
+           ],
+        ];
+
+        $jobs = get_posts( $query_args );
+
+        if( count( $jobs ) ){
+            foreach( $jobs as $job ){
+                $job_location = get_post_meta( $job->ID, 'geo_address', true );
+                if (strpos( $locations, $job_location ) === false ) {
+                    $locations .= $job_location . ' ';
+                }
+            }
+        }
+
+        return strtolower( $locations );
+   }
+
+   public static function get_available_search_locations(){
+        $search_locations = [];
+
+        $current_job_locations = self::get_current_job_locations();
+
+        $terms = get_terms( 
+            [
+                'taxonomy' => 'location',
+                'hide_empty' => false,
+                'orderby' => 'meta_value_num',
+                'meta_key' => 'order',
+                'order' => 'asc',
+            ]
+        );
+
+        $count = 0;
+        foreach ( $terms as $term ) {
+            if (strpos( $current_job_locations, $term->slug ) !== false ) {
+                $search_locations[ $term->slug ] = [
+                    'ID'            => $term->term_id,
+                    'key'           => $term->slug,
+                    'label'         => $term->name,
+                    'sortOrder'     => $count,
+                    'isSelected'    => false
+                ];
+                $count++;
+            }
+        }
+
+        return $search_locations;
+   }
 }
 
 new JAS_Search_Locations();
