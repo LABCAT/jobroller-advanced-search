@@ -1,7 +1,7 @@
 @import "abstracts/mixins";
 @import "abstracts/variables";
 
-#job-listings {
+#job-listings, #job-preview {
     ol.jobs {
         li.job {
             padding: 8px;
