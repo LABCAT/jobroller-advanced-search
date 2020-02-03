@@ -14,7 +14,7 @@ class JobsListItem extends Component {
         return (
             <li className={listClasses}>
                 <div className="details">
-                    <dl class="title-and-location">
+                    <dl className="title-and-location">
                         <dd className="title">
                             <strong>
                                 <a href={link} dangerouslySetInnerHTML={{ __html: title.rendered }}>
@@ -34,7 +34,7 @@ class JobsListItem extends Component {
                             </strong>
                         </dd>
                     </dl>
-                    <dl class="logo-and-date">
+                    <dl className="logo-and-date">
                         <dt>
                             Organisation Logo
                         </dt>

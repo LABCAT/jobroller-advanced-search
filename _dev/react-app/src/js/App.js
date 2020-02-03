@@ -38,6 +38,7 @@ class App extends Component {
     handleFilterUpate(filterOptionKey, filterType) {
         let filters = {...this.state.filters};
         let currentFilter = {...this.state.currentFilter};
+        let searchLocation = this.state.searchLocation;
         let postKey = '';
         switch (filterType){
             case "jobSalaries":
@@ -53,6 +54,9 @@ class App extends Component {
                 postKey = 'job_type';
         }
         
+        console.log('filters[filterType][filterOptionKey].isSelected');
+        console.log(filters[filterType][filterOptionKey].isSelected);
+        
 
         filters[filterType][filterOptionKey].isSelected = ! filters[filterType][filterOptionKey].isSelected;
         if(filters[filterType][filterOptionKey].isSelected){
@@ -60,9 +64,23 @@ class App extends Component {
         }
         else {
             let index = currentFilter[postKey].indexOf(filterOptionKey);
+            console.log('filterOptionKey');
+            console.log(filterOptionKey);
+            console.log('postKey');
+            console.log(postKey);
+            console.log('this.state.searchLocation');
+            console.log(this.state.searchLocation);
+            
+            
             if (index > -1) {
                 currentFilter[postKey].splice(index, 1);
+                // reset the searchLocation in state if the same filter option is being removed
+                // if (filterOptionKey === this.state.searchLocation) {
+                //     let searchLocation = '';
+                // }
             }
+
+
         }
         
 
@@ -70,7 +88,8 @@ class App extends Component {
             {
                 ...this.state,
                 filters,
-                currentFilter
+                currentFilter,
+                searchLocation
             }
         );
 
@@ -134,6 +153,7 @@ class App extends Component {
         isShown = this.matchesSearchTerm(jobListing);
         //now get the current filters and check if they are empty
         let currentFilter = {...this.state.currentFilter};
+        
         let emptyFilter = (!currentFilter.job_type.length && !currentFilter.job_salary.length && !currentFilter.job_category.length && !currentFilter.job_location.length);
 
         //only need to check if a job matches the current filters if the filter is not empty
@@ -277,12 +297,15 @@ class App extends Component {
                                             }
                                         }
                                         let possibleSearchLocations = JSON.parse(window.RJA.searchLocations);
-                                        if (!this.compareLocationKeys(possibleSearchLocations, jobLocations)) {
+                                        if (!this.compareLocationKeys(possibleSearchLocations, this.state.filters.jobLocations)) {
                                             if (post.job_address !== undefined) {
                                                 let jobAddress = post.job_address.toLowerCase();
 
                                                 for (const pKey of Object.keys(possibleSearchLocations)) {
-                                                    if (jobAddress.includes(pKey)){
+                                                    if (jobAddress.includes(pKey) && ! this.state.filters.jobLocations.hasOwnProperty(pKey)){
+                                                        console.log('updating jobLocations[pKey]');
+                                                        console.log(jobLocations);
+                                                        
                                                         jobLocations[pKey] = {
                                                             'id': possibleSearchLocations[pKey].ID,
                                                             'key': possibleSearchLocations[pKey].key,
@@ -331,6 +354,7 @@ class App extends Component {
                         //match search term for location in url
                         if (urlSearchLocation) {
                             for (const key of Object.keys(jobLocations)) {
+                                
                                 if (urlSearchLocation.includes(key)) {
                                     this.handleFilterUpate(key, 'jobLocations');
                                     break;
@@ -411,6 +435,10 @@ class App extends Component {
             );
             let filters = this.state.filters;
 
+            console.log('this.state.filters');
+            console.log(this.state.filters);
+            
+
 
             filtersArea =   <React.Fragment>
                                 {
@@ -451,7 +479,7 @@ class App extends Component {
                         </React.Fragment>
             }
             else if(this.state.currentPaginationPage >= this.state.paginatedPages){
-                sections = <p className="jobs">No jobs found.</p>
+                sections = <p className="jobs">Sorry, we couldn't find any jobs that match your search. Try changing or removing filters to broaden your search.</p>
             }
         }
         return (
