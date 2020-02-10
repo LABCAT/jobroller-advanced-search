@@ -54,36 +54,20 @@ class App extends Component {
                 postKey = 'job_type';
         }
         
-        console.log('filters[filterType][filterOptionKey].isSelected');
-        console.log(filters[filterType][filterOptionKey].isSelected);
-        
-
         filters[filterType][filterOptionKey].isSelected = ! filters[filterType][filterOptionKey].isSelected;
         if(filters[filterType][filterOptionKey].isSelected){
             currentFilter[postKey].push(filterOptionKey);
         }
         else {
             let index = currentFilter[postKey].indexOf(filterOptionKey);
-            console.log('filterOptionKey');
-            console.log(filterOptionKey);
-            console.log('postKey');
-            console.log(postKey);
-            console.log('this.state.searchLocation');
-            console.log(this.state.searchLocation);
-            
             
             if (index > -1) {
                 currentFilter[postKey].splice(index, 1);
-                // reset the searchLocation in state if the same filter option is being removed
-                // if (filterOptionKey === this.state.searchLocation) {
-                //     let searchLocation = '';
-                // }
             }
 
 
         }
         
-
         this.setState(
             {
                 ...this.state,
@@ -303,9 +287,6 @@ class App extends Component {
 
                                                 for (const pKey of Object.keys(possibleSearchLocations)) {
                                                     if (jobAddress.includes(pKey) && ! this.state.filters.jobLocations.hasOwnProperty(pKey)){
-                                                        console.log('updating jobLocations[pKey]');
-                                                        console.log(jobLocations);
-                                                        
                                                         jobLocations[pKey] = {
                                                             'id': possibleSearchLocations[pKey].ID,
                                                             'key': possibleSearchLocations[pKey].key,
@@ -354,9 +335,17 @@ class App extends Component {
                         //match search term for location in url
                         if (urlSearchLocation) {
                             for (const key of Object.keys(jobLocations)) {
-                                
                                 if (urlSearchLocation.includes(key)) {
                                     this.handleFilterUpate(key, 'jobLocations');
+                                    //once the location has been added to the filter, reset searchLocation variable in state 
+                                    //so that it won't be added again during the next loop
+                                    let searchLocation = '';
+                                    this.setState(
+                                        {
+                                            ...this.state,
+                                            searchLocation
+                                        }
+                                    );
                                     break;
                                 }
                             }
@@ -434,11 +423,6 @@ class App extends Component {
                 }
             );
             let filters = this.state.filters;
-
-            console.log('this.state.filters');
-            console.log(this.state.filters);
-            
-
 
             filtersArea =   <React.Fragment>
                                 {
