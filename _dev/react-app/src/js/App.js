@@ -151,7 +151,7 @@ class App extends Component {
                 if(matches && currentFilter[filterKey].length) {
                     //a job can have many locations so needs to treated differently
                     if (filterKey === 'job_location'){
-                        let jobAddress = jobListing.job_address.toLowerCase();
+                        let jobAddress = jobListing.job_address.toLowerCase().replace(/&#039;/g, '').split(' ').join('-');
                         let matchFound = false;
                         for (var i = 0; i < currentFilter[filterKey].length; i++) {
                             if (jobAddress.includes(currentFilter[filterKey][i])) {
@@ -281,10 +281,11 @@ class App extends Component {
                                             }
                                         }
                                         let possibleSearchLocations = JSON.parse(window.RJA.searchLocations);
+                                        
+                                        
                                         if (!this.compareLocationKeys(possibleSearchLocations, this.state.filters.jobLocations)) {
                                             if (post.job_address !== undefined) {
-                                                let jobAddress = post.job_address.toLowerCase();
-
+                                                let jobAddress = post.job_address.toLowerCase().replace(/&#039;/g, '').split(' ').join('-');
                                                 for (const pKey of Object.keys(possibleSearchLocations)) {
                                                     if (jobAddress.includes(pKey) && ! this.state.filters.jobLocations.hasOwnProperty(pKey)){
                                                         jobLocations[pKey] = {

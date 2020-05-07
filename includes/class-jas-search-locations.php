@@ -182,7 +182,8 @@ class JAS_Search_Locations {
 
         $count = 0;
         foreach ( $terms as $term ) {
-            if (strpos( $current_job_locations, $term->slug ) !== false ) {
+
+            if (strpos( $current_job_locations, strtolower($term->name) ) !== false ) {
                 $search_locations[ $term->slug ] = [
                     'ID'            => $term->term_id,
                     'key'           => $term->slug,
