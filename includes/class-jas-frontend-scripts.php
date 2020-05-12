@@ -51,7 +51,7 @@ class JAS_Frontend_Scripts {
             true
         );
 
-        $search_locations = JAS_Search_Locations::get_available_search_locations();
+        $search_locations = JAS_Search_Locations::get_available_search_locations( true );
 
         wp_localize_script(
             'react-jobs-archive',

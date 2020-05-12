@@ -284,20 +284,14 @@ class App extends Component {
                                         
                                         
                                         if (!this.compareLocationKeys(possibleSearchLocations, this.state.filters.jobLocations)) {
-                                            if (post.job_address !== undefined) {
-                                                let jobAddress = post.job_address.toLowerCase().replace(/&#039;/g, '').split(' ').join('-');
-                                                for (const pKey of Object.keys(possibleSearchLocations)) {
-                                                    if (jobAddress.includes(pKey) && ! this.state.filters.jobLocations.hasOwnProperty(pKey)){
-                                                        jobLocations[pKey] = {
-                                                            'id': possibleSearchLocations[pKey].ID,
-                                                            'key': possibleSearchLocations[pKey].key,
-                                                            'label': possibleSearchLocations[pKey].label,
-                                                            'sortOrder': possibleSearchLocations[pKey].sortOrder,
-                                                            'isSelected': possibleSearchLocations[pKey].isSelected
-                                                        }
-                                                    }
+                                            for (const pKey of Object.keys(possibleSearchLocations)) {
+                                                jobLocations[pKey] = {
+                                                    'id': possibleSearchLocations[pKey].ID,
+                                                    'key': possibleSearchLocations[pKey].key,
+                                                    'label': possibleSearchLocations[pKey].label,
+                                                    'sortOrder': possibleSearchLocations[pKey].sortOrder,
+                                                    'isSelected': possibleSearchLocations[pKey].isSelected
                                                 }
-                                                
                                             }
                                         }
                                     }

@@ -165,7 +165,7 @@ class JAS_Search_Locations {
         return strtolower( $locations );
    }
 
-   public static function get_available_search_locations(){
+   public static function get_available_search_locations( $all_locations = false ){
         $search_locations = [];
 
         $current_job_locations = self::get_current_job_locations();
@@ -183,7 +183,7 @@ class JAS_Search_Locations {
         $count = 0;
         foreach ( $terms as $term ) {
 
-            if (strpos( $current_job_locations, strtolower($term->name) ) !== false ) {
+            if (strpos( $current_job_locations, strtolower($term->name) ) !== false || $all_locations ) {
                 $search_locations[ $term->slug ] = [
                     'ID'            => $term->term_id,
                     'key'           => $term->slug,
