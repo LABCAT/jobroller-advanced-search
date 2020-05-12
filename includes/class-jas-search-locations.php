@@ -156,7 +156,7 @@ class JAS_Search_Locations {
         if( count( $jobs ) ){
             foreach( $jobs as $job ){
                 $job_location = get_post_meta( $job->ID, 'geo_address', true );
-                if (strpos( $locations, $job_location ) === false ) {
+                if ( $job_location && strpos( $locations, $job_location ) === false ) {
                     $locations .= $job_location . ' ';
                 }
             }
