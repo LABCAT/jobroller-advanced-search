@@ -57,7 +57,8 @@ class JAS_Frontend_Scripts {
             'react-jobs-archive',
             'RJA',
             [
-                'siteURL' => get_site_url(),
+                'siteURL' => esc_url( get_site_url() ),
+                'alertsURL' => esc_url( get_permalink( JR_Dashboard_Page::get_id() ) . '#alerts' ),
                 'searchLocations' => json_encode( $search_locations )
             ]
         );

@@ -14,6 +14,7 @@ class App extends Component {
         this.handleClearFilters = this.handleClearFilters.bind(this);
         this.state  = {
             siteURL: '',
+            alertsURL: '',
             totalPosts: 0,
             paginatedPages: 0,
             currentPaginationPage: 1,
@@ -319,13 +320,7 @@ class App extends Component {
 
                         let currentPaginationPage = this.state.currentPaginationPage + 1;
                         let posts = this.state.posts.concat(newPosts);
-                        console.log('jobLocations');
-                        console.log(jobLocations);
                         jobLocations = this.updateLocationCount(jobLocations, posts);
-                        console.log('jobLocations');
-                        console.log(jobLocations);
-                       
-
                         jobTypes =  {...this.state.filters.jobTypes, ...jobTypes };
                         jobSalaries =  {...this.state.filters.jobSalaries, ...jobSalaries };
                         jobCategories =  {...this.state.filters.jobCategories, ...jobCategories };
@@ -385,6 +380,7 @@ class App extends Component {
 
     componentDidMount(){
         let siteURL = window.RJA.siteURL;
+        let alertsURL = window.RJA.alertsURL;
         let searchTerm = '';
         let searchLocation = '';
         let urlVars = GetURLVars();
@@ -401,6 +397,7 @@ class App extends Component {
             {
                 ...this.state,
                 siteURL,
+                alertsURL,
                 searchTerm,
                 searchLocation
             }
@@ -475,7 +472,11 @@ class App extends Component {
                         </React.Fragment>
             }
             else if(this.state.currentPaginationPage >= this.state.paginatedPages){
-                sections = <p className="jobs">Sorry, we couldn't find any jobs that match your search. Try changing or removing filters to broaden your search.</p>
+                sections = 
+                <p className="jobs">
+                    Sorry, we couldn't find any jobs that match your search. Try changing or removing filters to broaden your search.
+                    You can also set up a <a href={this.state.alertsURL}>custom alert</a> to be updated when a job matches your search criteria.
+                </p>
             }
         }
         return (

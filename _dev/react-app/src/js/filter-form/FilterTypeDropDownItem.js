@@ -17,7 +17,6 @@ class FilterTypeDropDownItem extends Component {
         const { id, label, object, isSelected, onDropDownItemSelect } = this.props;
         const itemClass = isSelected ? 'filter-form-option selected' : 'filter-form-option';
         let calulatedLabel = label;
-        console.log(object);
         if ('jobCount' in object){
             if(object.jobCount > 1){
                 calulatedLabel += ' (' + object.jobCount + ' jobs)';
