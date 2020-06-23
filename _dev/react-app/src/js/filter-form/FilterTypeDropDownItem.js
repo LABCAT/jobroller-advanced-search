@@ -14,9 +14,19 @@ class FilterTypeDropDownItem extends Component {
     }
 
     render() {
-        const { id, label, isSelected, onDropDownItemSelect } = this.props;
+        const { id, label, object, isSelected, onDropDownItemSelect } = this.props;
         const itemClass = isSelected ? 'filter-form-option selected' : 'filter-form-option';
-
+        let calulatedLabel = label;
+        console.log(object);
+        if ('jobCount' in object){
+            if(object.jobCount > 1){
+                calulatedLabel += ' (' + object.jobCount + ' jobs)';
+            }
+            else if (object.jobCount === 1) {
+                calulatedLabel += ' (1 job)';
+            } 
+        }
+        
         return (
             <li className={itemClass}>
                 <button
@@ -25,7 +35,7 @@ class FilterTypeDropDownItem extends Component {
                     onClick={onDropDownItemSelect}
                     ref={button => this.button = button}
                 >
-                    {label}
+                    {calulatedLabel}
                     <span
                         className="remove"
                         onClick={this.handleChildClick}

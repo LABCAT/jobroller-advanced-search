@@ -64,8 +64,6 @@ class App extends Component {
             if (index > -1) {
                 currentFilter[postKey].splice(index, 1);
             }
-
-
         }
         
         this.setState(
@@ -204,12 +202,25 @@ class App extends Component {
 
     matchesSearchLocation(jobListing, searchLocations){
         let searchLocation = this.state.searchLocation.toLowerCase();
-        let location = jobListing.job_location.toLowerCase();
-        
+        let location = jobListing.job_location.key;
         if(location.includes(searchLocation)){
             return true;
         }
         return false;
+    }
+
+    updateLocationCount(jobLocations, posts){
+        const postsLength = posts.length;
+        for (const key of Object.keys(jobLocations)) {
+            jobLocations[key].jobCount = 0;
+            for (var i = 0; i < postsLength; i++) {
+                let location = posts[i].job_location.key;
+                if (location.includes(key)) {
+                    jobLocations[key].jobCount++;
+                }
+            }
+        }
+        return jobLocations;
     }
 
     fetchPosts(page){
@@ -282,7 +293,6 @@ class App extends Component {
                                         }
                                         let possibleSearchLocations = JSON.parse(window.RJA.searchLocations);
                                         
-                                        
                                         if (!this.compareLocationKeys(possibleSearchLocations, this.state.filters.jobLocations)) {
                                             for (const pKey of Object.keys(possibleSearchLocations)) {
                                                 jobLocations[pKey] = {
@@ -309,6 +319,13 @@ class App extends Component {
 
                         let currentPaginationPage = this.state.currentPaginationPage + 1;
                         let posts = this.state.posts.concat(newPosts);
+                        console.log('jobLocations');
+                        console.log(jobLocations);
+                        jobLocations = this.updateLocationCount(jobLocations, posts);
+                        console.log('jobLocations');
+                        console.log(jobLocations);
+                       
+
                         jobTypes =  {...this.state.filters.jobTypes, ...jobTypes };
                         jobSalaries =  {...this.state.filters.jobSalaries, ...jobSalaries };
                         jobCategories =  {...this.state.filters.jobCategories, ...jobCategories };

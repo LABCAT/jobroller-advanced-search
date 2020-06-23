@@ -88,6 +88,7 @@ class FilterTypeDropDown extends Component {
                             <FilterTypeDropDownItem
                                 key={option.key}
                                 id={option.key}
+                                object={option}
                                 label={option.label}
                                 isSelected={option.isSelected}
                                 onDropDownItemSelect={onDropDownItemSelect}

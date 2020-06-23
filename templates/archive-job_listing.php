@@ -16,23 +16,6 @@
             </div>
         </div><!-- end search-wrap -->
     </form>
-    <?php
-        $job_locations = JAS_Search_Locations::get_available_search_locations();
-        if( $job_locations ){
-            ?>
-            <div class="current-locations">
-                <strong>We currently have jobs listed in the following locations:</strong>
-                <ul>
-                    <?php
-                        foreach ( $job_locations as $job_location ) {
-                            echo '<li>'. $job_location['label'] . '</li>';
-                        }
-                    ?>
-                </ul>
-            </div>
-            <?php
-        }
-    ?>
    
     <!--[if lte IE 8]> 
         <div class="notice error" style="clear:both;">
