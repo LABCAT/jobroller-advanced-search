@@ -129,6 +129,16 @@
         cursor: pointer;
     }
 
+    &-label {
+        display: block;
+        float: left;
+        width: calc(100% - 18px);
+    }
+
+    &-job-count {
+        display: block;
+    }
+
     .remove {
         display: inline-block;
         float: right;

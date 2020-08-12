@@ -191,6 +191,8 @@ class App extends Component {
 
     matchesSearchTerm(jobListing){
         let searchTerm = this.state.searchTerm.toLowerCase();
+        searchTerm = searchTerm.replace('+', ' ')
+        
         let title = jobListing.title.rendered.toLowerCase();
         let content = jobListing.content.rendered.toLowerCase();
         //if there is no search term then all jobs are matching
@@ -212,6 +214,9 @@ class App extends Component {
 
     updateLocationCount(jobLocations, posts){
         const postsLength = posts.length;
+        console.log(Object.keys(jobLocations));
+        console.log(postsLength);
+        
         for (const key of Object.keys(jobLocations)) {
             jobLocations[key].jobCount = 0;
             for (var i = 0; i < postsLength; i++) {
@@ -255,7 +260,7 @@ class App extends Component {
                         let jobTypes = {};
                         let jobSalaries = {};
                         let jobCategories = {};
-                        let jobLocations = {};
+                        let jobLocations = this.state.filters.jobLocations;
                         let urlSearchLocation = this.state.searchLocation.toLowerCase();
                         
                         if(Array.isArray(responseJson) && responseJson.length){
