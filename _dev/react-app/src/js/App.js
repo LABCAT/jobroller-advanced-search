@@ -192,6 +192,8 @@ class App extends Component {
 
     matchesSearchTerm(jobListing){
         let searchTerm = this.state.searchTerm.toLowerCase();
+        searchTerm = searchTerm.replace('+', ' ')
+        
         let title = jobListing.title.rendered.toLowerCase();
         let content = jobListing.content.rendered.toLowerCase();
         //if there is no search term then all jobs are matching
