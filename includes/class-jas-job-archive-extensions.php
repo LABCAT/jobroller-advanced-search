@@ -158,7 +158,12 @@ class JAS_Job_Archive_Extensions {
                 return $type;
                 break;
             case 'job_salary':
-                $salary = [];
+                $salary = [
+                    'key' => 'not-stated',
+                    'ID' => 0,
+                    'slug' => 'not-stated',
+                    'label' => 'Not Stated'
+                ];
                 $job_salaries = get_the_terms( $post_id, APP_TAX_SALARY );
                 if ( $job_salaries &&  ! is_wp_error( $job_salaries ) ) {
                     foreach ( $job_salaries as $job_salary ) {
