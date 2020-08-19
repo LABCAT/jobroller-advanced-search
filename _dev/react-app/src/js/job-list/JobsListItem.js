@@ -33,6 +33,29 @@ class JobsListItem extends Component {
 
                             </strong>
                         </dd>
+                        <dt>
+                            Taxonmies
+                        </dt>
+                        <dd className="taxonomies">
+                            {
+                                job_type.label !== undefined  &&
+                                <span className={"jtype " + job_type.slug}>
+                                    {job_type.label}
+                                </span>
+                            }
+                            {
+                                job_salary.label  !== undefined &&
+                                <span className="salary">
+                                    {job_salary.label}
+                                </span>
+                            }
+                            {
+                                job_category.parentLabel !== undefined &&
+                                <span className="category">
+                                    {job_category.parentLabel}
+                                </span>
+                            }
+                        </dd>
                     </dl>
                     <dl className="logo-and-date">
                         <dt>
@@ -48,27 +71,6 @@ class JobsListItem extends Component {
 
                         </dd>
                     </dl>
-                </div>
-                
-                <div className="taxonomies">
-                    {
-                        job_type.label !== undefined  &&
-                        <span className={"jtype " + job_type.slug}>
-                            {job_type.label}
-                        </span>
-                    }
-                    {
-                        job_salary.label  !== undefined &&
-                        <span className="salary">
-                            {job_salary.label}
-                        </span>
-                    }
-                    {
-                        job_category.parentLabel !== undefined &&
-                        <span className="category">
-                            {job_category.parentLabel}
-                        </span>
-                    }
                 </div>
             </li>
         )

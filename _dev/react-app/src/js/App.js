@@ -214,8 +214,6 @@ class App extends Component {
 
     updateLocationCount(jobLocations, posts){
         const postsLength = posts.length;
-        console.log(Object.keys(jobLocations));
-        console.log(postsLength);
         
         for (const key of Object.keys(jobLocations)) {
             jobLocations[key].jobCount = 0;

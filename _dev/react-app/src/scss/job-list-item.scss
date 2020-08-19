@@ -12,7 +12,7 @@
             margin-bottom: 16px !important;
 
             @include bp(min-sm){
-                min-height: 190px;
+                min-height: 170px;
             }
         }
 
@@ -79,10 +79,11 @@
 
     .taxonomies {
         clear: both;
-        margin-top: auto;
+        display: flex;
+        flex-direction: column;
 
         span {
-            display: inline-block;
+            align-self: start;
             margin: 8px 8px 0 0;
             padding: 3px 16px;
             background-color: #666666;
