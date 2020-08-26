@@ -29,7 +29,7 @@
         </div>
     <![endif]-->
 
-    <div id="job-listings"></div>
+    <div id="job-listings" data-listing-types="paid"></div>
     
     <div class="clear"></div>
 

@@ -15,6 +15,7 @@ class App extends Component {
         this.state  = {
             siteURL: '',
             alertsURL: '',
+            listingTypes: 'paid',
             totalPosts: 0,
             paginatedPages: 0,
             currentPaginationPage: 1,
@@ -214,12 +215,13 @@ class App extends Component {
 
     updateLocationCount(jobLocations, posts){
         const postsLength = posts.length;
+        const listingTypes = this.state.listingTypes;
         
         for (const key of Object.keys(jobLocations)) {
             jobLocations[key].jobCount = 0;
             for (var i = 0; i < postsLength; i++) {
                 let location = posts[i].job_location.key;
-                if (location.includes(key)) {
+                if (location.includes(key) && posts[i].listingType == listingTypes) {
                     jobLocations[key].jobCount++;
                 }
             }
@@ -239,6 +241,7 @@ class App extends Component {
             }
         ).then(
             (response) => {
+                const listingTypes = this.state.listingTypes;
                 if(this.state.currentPaginationPage < 2){
                     let totalPosts = response.headers.get("X-WP-Total");
                     let paginatedPages = parseInt(response.headers.get("X-WP-TotalPages"));
@@ -264,7 +267,7 @@ class App extends Component {
                         if(Array.isArray(responseJson) && responseJson.length){
                             newPosts = responseJson.map(
                                 (post)  => {
-                                    if(post.listingType !== 'voluntary' && this.matchesSearchTerm(post)){
+                                    if(post.listingType == listingTypes && this.matchesSearchTerm(post)){
                                         if (! (post.job_type.slug in this.state.filters.jobTypes)) {
                                             if (post.job_type.slug !== undefined){
                                                 jobTypes[post.job_type.slug] = {
@@ -366,13 +369,13 @@ class App extends Component {
                         }
                     }
                 )
-           }
+            }
         )
-       .catch((
-           error) => {
-               console.error(error);
-           }
-       );
+        .catch((
+            error) => {
+                console.error(error);
+            }
+        );
     }
 
     compareLocationKeys(a, b) {
@@ -382,11 +385,14 @@ class App extends Component {
     }
 
     componentDidMount(){
+        const appHolder = document.getElementById('job-listings');
         let siteURL = window.RJA.siteURL;
         let alertsURL = window.RJA.alertsURL;
+        let listingTypes = appHolder.getAttribute('data-listing-types');
         let searchTerm = '';
         let searchLocation = '';
         let urlVars = GetURLVars();
+        
 
         if(urlVars.hasOwnProperty("s")){
             searchTerm = urlVars.s;
@@ -401,6 +407,7 @@ class App extends Component {
                 ...this.state,
                 siteURL,
                 alertsURL,
+                listingTypes,
                 searchTerm,
                 searchLocation
             }
@@ -418,9 +425,10 @@ class App extends Component {
         let sections =  <LoadingIcon/>
         
         if(this.state.posts.length){
+            const listingTypes = this.state.listingTypes;
             let featuredJobs = this.state.posts.filter(
                 function(job){
-                    if (job.isFeatured && job.isShown && job.listingType !== 'voluntary') {
+                    if (job.isFeatured && job.isShown && job.listingType == listingTypes) {
                         return job;
                     }
                     return null;
@@ -428,7 +436,7 @@ class App extends Component {
             );
             let jobs = this.state.posts.filter(
                 function(job){
-                    if (!job.isFeatured && job.isShown && job.listingType !== 'voluntary') {
+                    if (!job.isFeatured && job.isShown && job.listingType == listingTypes) {
                         return job;
                     }
                     return null;
