@@ -398,6 +398,10 @@ class App extends Component {
             searchTerm = urlVars.s;
         }
 
+        if (urlVars.hasOwnProperty("search")) {
+            searchTerm = urlVars.search;
+        }
+
         if(urlVars.hasOwnProperty("location")){
             searchLocation = urlVars.location;
         }
