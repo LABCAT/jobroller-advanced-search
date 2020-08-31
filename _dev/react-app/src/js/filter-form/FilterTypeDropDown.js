@@ -69,7 +69,9 @@ class FilterTypeDropDown extends Component {
         }
         else if (filterType === 'job-location') {
             dropdownOptions = Object.values(options).sort(
-                (a, b) => a.sortOrder - b.sortOrder
+                (a, b) => {
+                    return (b.jobCount - a.jobCount) || (a.sortOrder - b.sortOrder);
+                }
             );
         }
         else {
