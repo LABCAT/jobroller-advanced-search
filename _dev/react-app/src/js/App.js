@@ -151,7 +151,9 @@ class App extends Component {
                 if(matches && currentFilter[filterKey].length) {
                     //a job can have many locations so needs to treated differently
                     if (filterKey === 'job_location'){
-                        let jobAddress = jobListing.job_address.toLowerCase().replace(/&#039;/g, '').split(' ').join('-');
+                        //various replacements need to happen to the job address
+                        // &#039; = '
+                        let jobAddress = jobListing.job_address.toLowerCase().replace(' / ', '-').replace(/&#039;/g, '').split(' ').join('-');
                         let matchFound = false;
                         for (var i = 0; i < currentFilter[filterKey].length; i++) {
                             if (jobAddress.includes(currentFilter[filterKey][i])) {
@@ -216,12 +218,12 @@ class App extends Component {
     updateLocationCount(jobLocations, posts){
         const postsLength = posts.length;
         const listingTypes = this.state.listingTypes;
-        
         for (const key of Object.keys(jobLocations)) {
             jobLocations[key].jobCount = 0;
             for (var i = 0; i < postsLength; i++) {
                 let location = posts[i].job_location.key;
-                if (location.includes(key) && posts[i].listingType == listingTypes) {
+                // jobs without a matching location have default job location with posts[i].job_location.ID = 0
+                if (location.includes(key) && posts[i].listingType === listingTypes && posts[i].job_location.ID) {
                     jobLocations[key].jobCount++;
                 }
             }
@@ -267,7 +269,7 @@ class App extends Component {
                         if(Array.isArray(responseJson) && responseJson.length){
                             newPosts = responseJson.map(
                                 (post)  => {
-                                    if(post.listingType == listingTypes && this.matchesSearchTerm(post)){
+                                    if(post.listingType === listingTypes && this.matchesSearchTerm(post)){
                                         if (! (post.job_type.slug in this.state.filters.jobTypes)) {
                                             if (post.job_type.slug !== undefined){
                                                 jobTypes[post.job_type.slug] = {
@@ -432,7 +434,7 @@ class App extends Component {
             const listingTypes = this.state.listingTypes;
             let featuredJobs = this.state.posts.filter(
                 function(job){
-                    if (job.isFeatured && job.isShown && job.listingType == listingTypes) {
+                    if (job.isFeatured && job.isShown && job.listingType === listingTypes) {
                         return job;
                     }
                     return null;
@@ -440,7 +442,7 @@ class App extends Component {
             );
             let jobs = this.state.posts.filter(
                 function(job){
-                    if (!job.isFeatured && job.isShown && job.listingType == listingTypes) {
+                    if (!job.isFeatured && job.isShown && job.listingType === listingTypes) {
                         return job;
                     }
                     return null;
