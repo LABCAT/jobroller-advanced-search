@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import DollarSignIcon from '../components/DollarSignIcon.js';
 
 class JobsListItem extends Component {
 
     render() {
-        const { isShown, isFeatured, job_author, job_type, job_category, job_salary, job_date, job_address, job_thumbnail, link, title } = this.props;
+        const { isShown, isFeatured, job_author, job_type, job_category, job_salary, job_salary_custom, job_date, job_address, job_thumbnail, link, title } = this.props;
 
         if(!isShown){
             return (null);
@@ -37,6 +38,13 @@ class JobsListItem extends Component {
                             Taxonmies
                         </dt>
                         <dd className="taxonomies">
+                            {
+                                job_salary_custom !== '' &&
+                                <span className="custom-salary">
+                                    <DollarSignIcon />
+                                    {job_salary_custom}
+                                </span>
+                            }
                             {
                                 job_type.label !== undefined  &&
                                 <span className={"jtype " + job_type.slug}>

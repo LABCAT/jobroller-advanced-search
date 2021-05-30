@@ -81,6 +81,7 @@ class JAS_Job_Archive_Extensions {
             'job_salary',
             'job_category',
             'job_author',
+            'job_salary_custom',
             'job_location',
             'job_address',
             'job_date',
@@ -200,6 +201,9 @@ class JAS_Job_Archive_Extensions {
             case 'job_author':
                 $company_name = wptexturize( strip_tags( get_post_meta( $post_id , '_Company', true ) ) );
                 return $company_name;
+                break;
+            case 'job_salary_custom':
+                return get_post_meta( $post_id, '_displayed_salary', true );
                 break;
             case 'job_location':
                 return self::get_job_location( $post_id );
