@@ -15,6 +15,7 @@ class App extends Component {
         this.state  = {
             siteURL: '',
             alertsURL: '',
+            salaryTaxonomyEnabled: true,
             listingTypes: 'paid',
             totalPosts: 0,
             paginatedPages: 0,
@@ -388,9 +389,10 @@ class App extends Component {
 
     componentDidMount(){
         const appHolder = document.getElementById('job-listings');
+        let listingTypes = appHolder.getAttribute('data-listing-types');
         let siteURL = window.RJA.siteURL;
         let alertsURL = window.RJA.alertsURL;
-        let listingTypes = appHolder.getAttribute('data-listing-types');
+        let salaryTaxonomyEnabled = window.RJA.salaryTaxonomyEnabled;
         let searchTerm = '';
         let searchLocation = '';
         let urlVars = GetURLVars();
@@ -415,7 +417,8 @@ class App extends Component {
                 alertsURL,
                 listingTypes,
                 searchTerm,
-                searchLocation
+                searchLocation,
+                salaryTaxonomyEnabled
             }
         );
         window.addEventListener(
@@ -454,6 +457,7 @@ class App extends Component {
                                 {
                                     <FilterForm
                                         handleFilterUpate={ this.handleFilterUpate }
+                                        showSalaryFilter={ this.state.salaryTaxonomyEnabled }
                                         {...filters}
                                     />
                                 }
@@ -473,6 +477,7 @@ class App extends Component {
                                 <JobsList
                                     jobs={featuredJobs}
                                     title="Featured Jobs"
+                                    showSalaryTag={ this.state.salaryTaxonomyEnabled }
                                     rssLink={this.state.siteURL + '/feed/?rss_featured=1'}
                                 />
                             }
@@ -480,6 +485,7 @@ class App extends Component {
                                 <JobsList
                                     jobs={jobs}
                                     title="Latest Jobs"
+                                    showSalaryTag={ this.state.salaryTaxonomyEnabled }
                                     rssLink={this.state.siteURL + '/feed/?post_type=job_listing'}
                                 />
                             }

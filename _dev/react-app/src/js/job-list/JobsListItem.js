@@ -4,7 +4,7 @@ import DollarSignIcon from '../components/DollarSignIcon.js';
 class JobsListItem extends Component {
 
     render() {
-        const { isShown, isFeatured, job_author, job_type, job_category, job_salary, job_salary_custom, job_date, job_address, job_thumbnail, link, title } = this.props;
+        const { isShown, isFeatured, showSalaryTag, job_author, job_type, job_category, job_salary, job_salary_custom, job_date, job_address, job_thumbnail, link, title } = this.props;
 
         if(!isShown){
             return (null);
@@ -52,7 +52,7 @@ class JobsListItem extends Component {
                                 </span>
                             }
                             {
-                                job_salary.label  !== undefined &&
+                                showSalaryTag && job_salary.label  !== undefined &&
                                 <span className="salary">
                                     {job_salary.label}
                                 </span>

@@ -5,7 +5,7 @@ import JobsListItem from './JobsListItem.js';
 class JobsList extends Component {
 
     render() {
-        const { jobs, title, rssLink } = this.props;
+        const { jobs, title, rssLink, showSalaryTag } = this.props;
 
         if(!jobs.length){
             return (null);
@@ -16,7 +16,7 @@ class JobsList extends Component {
                     {
                         jobs.map(
                             job => (
-                                <JobsListItem  {...job} />
+                                <JobsListItem  {...job} showSalaryTag={showSalaryTag} />
                             )
                         )
                     }

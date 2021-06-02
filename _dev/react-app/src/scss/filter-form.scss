@@ -7,15 +7,6 @@
     fieldset {
         box-sizing: border-box;
         padding: 10px 5px;
-    }@import "abstracts/mixins";
-@import "abstracts/variables";
-
-#filter-form {
-    padding: 0 0 10px;
-
-    fieldset {
-        box-sizing: border-box;
-        padding: 10px 5px;
     }
 
     .dropdown-menu {
@@ -36,7 +27,6 @@
         text-align: left;
         z-index: 1000;
     }
-
 }
 
 #filter-form-inner {
@@ -104,6 +94,12 @@
         }
     }
 
+    .three-filters & {
+        width: 33.3333%;
+        @include bp(sm-min){
+            width: calc(33.3333% - 6px);
+        }   
+    }
 }
 
 .filter-form-option {
@@ -138,196 +134,6 @@
     &-job-count {
         display: block;
         clear: both;
-    }
-
-    .remove {
-        display: inline-block;
-        float: right;
-        width: 12px;
-        padding: 0 3px;
-        visibility: hidden;
-        font-weight: 900;
-        text-align: left;
-    }
-
-    &.selected {
-        background-color: $hot-cinnamon;
-
-        .remove {
-            visibility: visible;
-        }
-    }
-}
-
-#filter-buttons-holder {
-    margin-bottom: 20px;
-
-    button {
-        margin: 0 6px 6px 0;
-        padding: 8px;
-        background-color: white;
-        border: 2px solid $hot-cinnamon;
-        border-radius: 5px;
-        color: $hot-cinnamon;
-        font-weight: bold;
-
-        &:hover {
-
-            background-color: $fiery-orange;
-            border: 2px solid $hot-cinnamon;
-            color: white;
-            cursor: pointer;
-
-            .remove {
-                color: white;
-            }
-        }
-    }
-
-    #clear-all {
-        float: right;
-        background: transparent;
-        border: none;
-        color: $hot-cinnamon;
-        font-size: 16px;
-
-        &:hover {
-            color: $fiery-orange;
-        }
-    }
-
-    .remove {
-        padding-left: 5px;
-        color: $hot-cinnamon;
-        font-weight: bold;
-    }
-}
-
-.filter-form-checkbox {
-    clear: both;
-    margin-bottom: 5px;
-
-    input {
-        float: left;
-        margin-top: 0;
-        margin-right: 7px;
-    }
-
-}
-
-
-    .dropdown-menu {
-        float: left;
-        position: absolute;
-        top: 100%;
-        left: -1px;
-        width: 100%;
-        min-width: 160px;
-        padding: 0;
-        margin: 0;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid rgba(0,0,0,0.15);
-        border-radius: 4px;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
-        font-size: 15px;
-        list-style: none;
-        text-align: left;
-        z-index: 1000;
-    }
-
-}
-
-#filter-form-inner {
-
-    .toggle, #filter-form-actions {
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 10px;
-        background: white;
-        border: 1px solid #D0D0D0;
-        font-weight: bold;
-
-        svg {
-            fill:$hot-cinnamon;
-            margin-left: auto;
-            transition: all 0.4s ease;
-        }
-
-        &.open svg {
-            transform: rotateZ(-180deg);
-        }
-    }
-
-    .toggle {
-
-        &:hover, &.selected {
-            cursor: pointer;
-            background: $hot-cinnamon;
-            color: white;
-
-            svg {
-                fill: white;
-            }
-        }
-
-        &.selected {
-
-            svg {
-                transform: rotate(180deg);
-            }
-
-            &:hover {
-                color: black;
-
-                svg {
-                    fill: black;
-                }
-
-            }
-        }
-    }
-}
-
-.filter-type-holder {
-    position: relative;
-    float: left;
-    width: 100%;
-    margin: 0 0 9px 0;
-
-    @include bp(sm-min){
-        width: calc(33.3333% - 6px);
-        margin: 0 9px 0 0;
-        &.last {
-            margin: 0;
-        }
-    }
-
-}
-
-.filter-form-option {
-    padding: 4px 10px;
-
-    &:hover {
-        background-color: lightgrey;
-    }
-
-    &:after {
-        content: ' ';
-        display: table;
-        clear: both;
-    }
-
-    button {
-        float: left;
-        width: 100%;
-        padding: 0;
-        background-color: transparent;
-        border: none;
-        text-align: left;
-        cursor: pointer;
     }
 
     .remove {

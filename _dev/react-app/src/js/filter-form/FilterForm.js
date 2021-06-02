@@ -9,22 +9,24 @@ class FilterForm extends Component {
     };
 
     render() {
-        const { jobSalaries, jobTypes, jobCategories, jobLocations} = this.props;
+        const { jobSalaries, jobTypes, jobCategories, jobLocations, showSalaryFilter } = this.props;
         return (
             <form id="filter-form">
-                <div id="filter-form-inner">
+                <div id="filter-form-inner" className={showSalaryFilter ? 'four-filters' : 'three-filters'}>
                     <FilterTypeDropDown
                         filterType="job-type"
                         label="Job Type"
                         onDropDownItemSelect={ (e) => this.handleFilterTypeUpdate(e, "jobTypes") }
                         {...jobTypes}
                     />
-                    <FilterTypeDropDown
-                        filterType="job-salary"
-                        label="Salary"
-                        onDropDownItemSelect={ (e) => this.handleFilterTypeUpdate(e, "jobSalaries") }
-                        {...jobSalaries}
-                    />
+                    { showSalaryFilter &&
+                        <FilterTypeDropDown
+                            filterType="job-salary"
+                            label="Salary"
+                            onDropDownItemSelect={ (e) => this.handleFilterTypeUpdate(e, "jobSalaries") }
+                            {...jobSalaries}
+                        />
+                    }
                     <FilterTypeDropDown
                         filterType="job-category"
                         label="Category"
