@@ -120,7 +120,6 @@
       }
 
       &.custom-salary {
-        align-self: flex-start;
         width: calc(100% - 160px) !important;
         padding: 3px 0;
         background-color: transparent;
@@ -128,6 +127,7 @@
         font-weight: 600;
 
         svg {
+          align-self: flex-start;
           margin-right: 5px;
           fill: #444;
         }
