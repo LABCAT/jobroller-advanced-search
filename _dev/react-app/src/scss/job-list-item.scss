@@ -40,11 +40,13 @@
           &.custom-salary {
             display: flex;
             align-items: center;
+            padding: 3px 0 3px 10px;
             background-color: transparent;
             color: #444;
             font-weight: 600;
 
             svg {
+              align-self: flex-start;
               margin-right: 3px;
               fill: #444;
             }
