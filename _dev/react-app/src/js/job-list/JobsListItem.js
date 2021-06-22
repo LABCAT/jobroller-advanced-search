@@ -22,6 +22,13 @@ class JobsListItem extends Component {
 
                                 </a>
                             </strong>
+                            {
+                                job_salary_custom !== '' &&
+                                <span className="custom-salary">
+                                    <DollarSignIcon />
+                                    {job_salary_custom}
+                                </span>
+                            }
                             <span dangerouslySetInnerHTML={{ __html: job_author }}>
 
                             </span>
@@ -38,13 +45,6 @@ class JobsListItem extends Component {
                             Taxonmies
                         </dt>
                         <dd className="taxonomies">
-                            {
-                                job_salary_custom !== '' &&
-                                <span className="custom-salary">
-                                    <DollarSignIcon />
-                                    {job_salary_custom}
-                                </span>
-                            }
                             {
                                 job_type.label !== undefined  &&
                                 <span className={"jtype " + job_type.slug}>
