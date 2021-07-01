@@ -16,11 +16,14 @@ class JobsListItem extends Component {
             <li className={listClasses}>
                 <div className="details">
                     <dl className="title-and-location">
-                        <dd className="title">
-                            <strong>
+                        <dd className="details">
+                            <strong className="details">
                                 <a href={link} dangerouslySetInnerHTML={{ __html: title.rendered }}>
 
                                 </a>
+                            </strong>
+                            <strong dangerouslySetInnerHTML={{ __html: job_author }}>
+
                             </strong>
                             {
                                 job_salary_custom !== '' &&
@@ -29,9 +32,6 @@ class JobsListItem extends Component {
                                     {job_salary_custom}
                                 </span>
                             }
-                            <span dangerouslySetInnerHTML={{ __html: job_author }}>
-
-                            </span>
                         </dd>
                         <dt>
                             Location

@@ -30,9 +30,14 @@
     }
 
     dd {
-      &.title {
+      &.details {
         width: 100% !important;
         padding: 0 0 10px;
+
+        .title {
+          color: #555;
+          font-weight: 700;
+        }
 
         strong, span {
           display: block;
@@ -42,15 +47,14 @@
             align-items: center;
             padding: 3px 10px 0 0;
             background-color: transparent;
-            color: #444;
-            font-weight: 600;
+            color: #999;
 
             svg {
               align-self: flex-start;
               width: 20px;
               height: 20px;
               margin-right: 3px;
-              fill: #444;
+              fill: #999;
             }
           }
         }
