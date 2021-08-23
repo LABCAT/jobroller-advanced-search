@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './functions/AllReplace';
 import GetURLVars from './functions/GetURLVars.js';
 import FilterForm from './filter-form/FilterForm.js';
 import FilterButtonsHolder from './filter-form/FilterButtonsHolder.js';
@@ -192,12 +193,24 @@ class App extends Component {
         return true;
     }
 
+    macronReplacements = {
+        'ā': 'a', 
+        '%c4%81': 'a', 
+        'ē': 'e',
+        '%c4%93': 'e',
+        'ī': 'i',
+        '%c4%ab': 'i',
+        'ō': 'o',
+        '%c5%8d': 'o',
+        'ū': 'u',
+        '%c5%ab': 'u',
+    }
+
     matchesSearchTerm(jobListing){
-        let searchTerm = this.state.searchTerm.toLowerCase();
-        searchTerm = searchTerm.replace('+', ' ')
+        let searchTerm = this.state.searchTerm.replace(/\+/g, "").toLowerCase().allReplace(this.macronReplacements);
         
-        let title = jobListing.title.rendered.toLowerCase();
-        let content = jobListing.content.rendered.toLowerCase();
+        let title = jobListing.title.rendered.toLowerCase().allReplace(this.macronReplacements);
+        let content = jobListing.content.rendered.toLowerCase().allReplace(this.macronReplacements);
         //if there is no search term then all jobs are matching
         if (title.includes(searchTerm) || content.includes(searchTerm) || !searchTerm){
             return true;
