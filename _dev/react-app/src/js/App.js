@@ -16,6 +16,7 @@ class App extends Component {
         this.state  = {
             siteURL: '',
             alertsURL: '',
+            feedURL: '',
             salaryTaxonomyEnabled: true,
             listingTypes: 'paid',
             totalPosts: 0,
@@ -405,11 +406,11 @@ class App extends Component {
         let listingTypes = appHolder.getAttribute('data-listing-types');
         let siteURL = window.RJA.siteURL;
         let alertsURL = window.RJA.alertsURL;
+        let feedURL = listingTypes === 'voluntary' ? siteURL + '/voluntary-jobs/rss-feed/' : siteURL + '/rss-feed/';
         let salaryTaxonomyEnabled = window.RJA.salaryTaxonomyEnabled;
         let searchTerm = '';
         let searchLocation = '';
         let urlVars = GetURLVars();
-        
 
         if(urlVars.hasOwnProperty("s")){
             searchTerm = urlVars.s;
@@ -428,6 +429,7 @@ class App extends Component {
                 ...this.state,
                 siteURL,
                 alertsURL,
+                feedURL,
                 listingTypes,
                 searchTerm,
                 searchLocation,
@@ -491,7 +493,7 @@ class App extends Component {
                                     jobs={featuredJobs}
                                     title="Featured Jobs"
                                     showSalaryTag={ this.state.salaryTaxonomyEnabled }
-                                    rssLink={this.state.siteURL + '/feed/?rss_featured=1'}
+                                    rssLink={this.state.feedURL + '?rss_featured=1'}
                                 />
                             }
                             {
@@ -499,7 +501,7 @@ class App extends Component {
                                     jobs={jobs}
                                     title="Latest Jobs"
                                     showSalaryTag={ this.state.salaryTaxonomyEnabled }
-                                    rssLink={this.state.siteURL + '/feed/?post_type=job_listing'}
+                                    rssLink={this.state.feedURL}
                                 />
                             }
                             {
