@@ -420,6 +420,10 @@ class App extends Component {
             searchTerm = urlVars.search;
         }
 
+        if(appHolder.getAttribute('data-seo-search-term')) {
+            searchTerm = appHolder.getAttribute('data-seo-search-term');
+        }
+
         if(urlVars.hasOwnProperty("location")){
             searchLocation = urlVars.location;
         }
