@@ -209,8 +209,7 @@ class App extends Component {
     }
 
     matchesSearchTerm(jobListing){
-        const searchTerm = this.state.searchTerm.replace(/\+/g, "").toLowerCase().allReplace(this.macronReplacements);
-        
+        const searchTerm = this.state.searchTerm.replace(/\+/g, " ").toLowerCase().allReplace(this.macronReplacements);
         let title = jobListing.title.rendered.toLowerCase().allReplace(this.macronReplacements);
         let content = jobListing.content.rendered.toLowerCase().allReplace(this.macronReplacements);
         //if there is no search term then all jobs are matching
